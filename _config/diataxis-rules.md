@@ -35,17 +35,27 @@ These two dimensions define four and only four quadrants. The number is not arbi
 
 ## The Compass (Classification Method)
 
-Two questions, applied in order. Stop at first answer.
+**Both questions must always be answered.** The compass is a 2×2 matrix — a single answer gives you half an axis, not a quadrant. Never classify based on one question alone.
 
-**Q1: Practical (doing) or Theoretical (understanding)?**
-**Q2: Study (acquiring skill) or Work (applying skill)?**
+**Q1: Action (practical, doing) or Cognition (theoretical, thinking)?**
+**Q2: Acquisition (study, building skill) or Application (work, using skill)?**
 
-| | Study | Work |
+Answer both. The intersection is the quadrant.
+
+| | Acquisition (Study) | Application (Work) |
 |---|---|---|
-| **Practical** | TUTORIAL | HOW-TO |
-| **Theoretical** | EXPLANATION | REFERENCE |
+| **Action (Practical)** | TUTORIAL | HOW-TO |
+| **Cognition (Theoretical)** | EXPLANATION | REFERENCE |
 
-Apply the compass at the sentence level, not just document level. A paragraph that gives step-by-step instructions inside an explanation document is contamination — regardless of where the document is filed.
+**Vocabulary mapping** (official Diataxis terms → simplified equivalents used in this pipeline):
+- Action = Practical = doing
+- Cognition = Theoretical = thinking/understanding
+- Acquisition = Study = learning/building skill
+- Application = Work = using existing skill
+
+Apply the compass at the sentence level, not just document level. A paragraph that gives step-by-step instructions inside an Explanation document is contamination — regardless of where the document is filed.
+
+**The compass is most useful when your intuition feels wrong.** If you're troubled by doubt while classifying, stop and apply both questions explicitly before proceeding.
 
 ---
 
@@ -225,7 +235,7 @@ Contamination is the mixing of one quadrant's content into a document of another
 - Slightly wrong tone in Reference
 - Missing link to companion document
 
-### The Eight Critical Contamination Patterns
+### The Eight Primary Contamination Patterns
 
 | Pattern | Appears In | Contamination Type | Severity |
 |---|---|---|---|
@@ -300,3 +310,26 @@ A document passes quality gate when:
 6. Derive Reference from Explanation: what machinery needs description?
 7. Run contamination check on each document before passing to Stage 4
 8. If contamination found: extract and route to correct document — never delete good content
+
+---
+
+## Diataxis as Guide, Not Plan
+
+From `Applying_Diátaxis.docx` (official source): *"Diátaxis provides an approach to work that runs counter to much of the accepted wisdom in documentation. In particular, it discourages planning and top-down workflows, preferring instead small, responsive iterations from which overall patterns emerge."*
+
+**What this means for this pipeline:**
+
+The pipeline enforces sequential execution because deterministic stages produce consistent output. But within each stage, Diataxis should be applied iteratively — not all at once top-down.
+
+When Stage 3 runs:
+- Start with what you have. A partial Explanation is better than a perfect outline.
+- Write, classify, discover contamination, extract, repeat.
+- The four documents will not emerge perfectly formed on the first pass. They improve through iteration.
+- Use the compass as a correction tool mid-writing, not just at the start.
+
+**What this does NOT mean:**
+- It does not mean the four quadrants are optional.
+- It does not mean contamination is acceptable "for now."
+- It does not mean you can skip the compass classification step.
+
+The iterative philosophy applies to the writing process. The framework rules are non-negotiable.

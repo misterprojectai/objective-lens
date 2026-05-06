@@ -24,13 +24,15 @@ Transform objective-mapped content passages into four pure Diataxis documents. E
 
 Read the full `_mapped-passages.md` file. Before generating a single word of output, run the compass on every passage.
 
-For each passage, apply in order:
-1. Is this content practical (doing) or theoretical (understanding)?
-2. Is this content for study (acquiring skill) or work (applying skill)?
+**Both questions must be answered for every passage — not one, both:**
+1. Is this content action-oriented (practical, doing) or cognition-oriented (theoretical, thinking)?
+2. Is this content for acquisition (study, building skill) or application (work, using existing skill)?
+
+The intersection of both answers determines the quadrant. A passage about how a filesystem works is theoretical — but is the reader studying to understand it (Explanation) or consulting it while configuring something (Reference)? Both questions are required to know.
 
 Assign each passage to exactly one quadrant: Tutorial, How-to, Reference, or Explanation.
 
-**Document the classification.** Write a classification header in your working notes (not in the output file) listing which passages map to which quadrant. If a passage clearly belongs to two quadrants, split it — extract the theoretical portion to Explanation, the procedural portion to How-to or Tutorial.
+**Document the classification.** Write a classification map in your working notes (not in the output file) listing which passages go where. If a passage spans two quadrants, split it — extract the theoretical portion to Explanation, the procedural portion to How-to or Tutorial. Do not discard good content — route it.
 
 ---
 

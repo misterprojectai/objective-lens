@@ -1,12 +1,10 @@
 # TEMPLATE: Tutorial
-<!-- TYPE: tutorial | QUADRANT: practical + study | PLATFORM: GitBook + iximiuz (separate versions) -->
+<!-- TYPE: tutorial | QUADRANT: practical + study | PLATFORM: GitBook + iximiuz (separate versions built in Stage 4/5) -->
 <!-- PURPOSE: A guided learning experience. Teacher takes full responsibility for learner success. -->
 <!-- "READ IN BATH" TEST: FAILS. This requires hands-on doing at a terminal. -->
-<!-- COMPASS CHECK: Practical (doing)? Yes. Study (acquiring skill)? Yes. → Tutorial confirmed. -->
+<!-- COMPASS CHECK: Both questions required. Action (practical)? Yes. Acquisition (study)? Yes. → Tutorial confirmed. -->
 <!-- WRITE THIS SECOND. Derived from the Explanation anchor. -->
-<!-- NOTE: This is the CONTENT template. GitBook and iximiuz require different FORMAT wrappers. -->
-<!-- GitBook: wrap steps in {% stepper %}{% step %} blocks -->
-<!-- iximiuz: wrap verification tasks in ::simple-task MDC components -->
+<!-- THIS IS THE CONTENT TEMPLATE. Platform formatting ({% stepper %}, ::simple-task) is applied in Stage 4/5, not here. -->
 
 ---
 title: "[Action-Oriented Title: Build/Create/Configure Your First X]"
@@ -24,6 +22,7 @@ status: draft
 <!-- IRON LAW: One path only. No alternatives. No "you could also." -->
 <!-- IRON LAW: Every step must produce a visible result, every time, for every user. -->
 <!-- IRON LAW: Use "we" language throughout. Tutor and learner do this together. -->
+<!-- IRON LAW: Minimize explanation. Theory is in the Explanation document — link, don't repeat. -->
 
 In this tutorial, we will [concrete outcome the learner will achieve]. Along the way, we will work with [2-3 key concepts/commands they'll use].
 
@@ -32,7 +31,7 @@ In this tutorial, we will [concrete outcome the learner will achieve]. Along the
 ## Prerequisites
 
 <!-- MINIMAL. Only absolute requirements. No "nice to haves." -->
-<!-- A learner who meets these prerequisites must be able to complete every step. -->
+<!-- Every learner who meets these prerequisites must be able to complete every step. -->
 
 Before starting, ensure you have:
 
@@ -44,7 +43,7 @@ Before starting, ensure you have:
 ## What We'll Build
 
 <!-- Show the end state BEFORE step one. Let the learner visualize success. -->
-<!-- This is the contract: if you follow every step, you will have this at the end. -->
+<!-- This is the contract: follow every step, get this result. -->
 
 By the end of this tutorial, you will have [concrete, verifiable outcome]. The system will be in this state:
 
@@ -71,10 +70,8 @@ You should see:
 [exact expected output]
 ```
 
-<!-- Confirm they're on track before moving to Step 2. -->
-<!-- If this step can fail in a predictable way, name it: "If you see X instead, Y." -->
-
 [Optional: one sentence of confirmation — "This confirms that Z is now active."]
+[If predictable failure: "If you see X instead of Y, [specific fix]."]
 
 ---
 
@@ -95,7 +92,7 @@ You should see:
 [exact expected output]
 ```
 
-Notice that [point out one important thing the learner should observe — connects action to understanding without explaining theory].
+Notice that [point out one important observation — connects action to understanding without explaining theory].
 
 ---
 
@@ -117,10 +114,10 @@ You should see:
 
 ---
 
-## Step N: [Final Action — typically the verification step]
+## Step N: [Final Action — verify complete system state]
 
 <!-- The last step always verifies the complete system state. -->
-<!-- Output should match exactly what was shown in "What We'll Build." -->
+<!-- Output must match what was shown in "What We'll Build." -->
 
 Finally, we verify the complete configuration.
 
@@ -138,8 +135,7 @@ You should see:
 
 ## What We Accomplished
 
-<!-- Close the loop. Reinforce WHAT THEY DID, not what they "learned." -->
-<!-- Active voice. Past tense. Actions, not concepts. -->
+<!-- Close the loop. Reinforce WHAT THEY DID — past tense, active voice, actions not concepts. -->
 
 In this tutorial, we:
 
@@ -151,7 +147,7 @@ In this tutorial, we:
 
 ## Next Steps
 
-<!-- Link outward. Do NOT teach more here. Send them somewhere. -->
+<!-- Link outward. Do NOT teach more here. -->
 
 Now that you have [outcome], you might want to:
 
@@ -160,16 +156,15 @@ Now that you have [outcome], you might want to:
 - [Link to Reference: see complete command options]
 
 ---
-<!-- CONTAMINATION CHECK BEFORE PUBLISHING:
+<!-- CONTAMINATION CHECK BEFORE PUBLISHING (Diataxis purity only — platform checks are Stage 4/5):
   [ ] Zero explanation paragraphs ("the reason this works is...")
   [ ] Zero alternative paths ("you could also...")
   [ ] Zero parameter tables or flag listings
   [ ] "We" language used throughout
-  [ ] Every step has an explicit "You should see:" block
+  [ ] Every step has an explicit "You should see:" block with exact output
   [ ] Single path to completion — no branching
   [ ] "What We Accomplished" section present
   [ ] Links to How-to, Explanation, Reference in Next Steps
-  [ ] GitBook version: steps wrapped in {% stepper %}{% step %} blocks
-  [ ] iximiuz version: verification tasks wrapped in ::simple-task components
-  [ ] iximiuz version: all Diataxis frontmatter (type, quadrant) stripped before push
+  [ ] No iximiuz MDC components (::simple-task etc.) — platform formatting is Stage 4/5
+  [ ] No GitBook liquid blocks ({% stepper %} etc.) — platform formatting is Stage 4/5
 -->

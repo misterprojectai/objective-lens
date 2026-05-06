@@ -1,10 +1,14 @@
 # TEMPLATE: How-to Guide
-<!-- TYPE: how-to | QUADRANT: practical + work | PLATFORM: GitBook + iximiuz (separate versions) -->
+<!-- TYPE: how-to | QUADRANT: practical + work | PLATFORM: GitBook + iximiuz (separate versions built in Stage 4/5) -->
 <!-- PURPOSE: Help a competent user accomplish a specific real-world task. -->
-<!-- "READ IN BATH" TEST: FAILS. How-tos require doing at a terminal. -->
-<!-- COMPASS CHECK: Practical (doing)? Yes. Work (applying existing skill)? Yes. → How-to confirmed. -->
+<!-- "READ IN BATH" TEST: FAILS. Requires doing at a terminal. -->
+<!-- COMPASS CHECK: Both questions required. Action (practical)? Yes. Application (work)? Yes. → How-to confirmed. -->
 <!-- WRITE THIS THIRD. Derived from Explanation: what practical tasks does this concept enable? -->
-<!-- NOTE: Title MUST begin with "How to..." — no exceptions. -->
+<!-- TITLE RULE: Must begin with "How to..." — no exceptions. -->
+<!-- THIS IS THE CONTENT TEMPLATE. Platform formatting is applied in Stage 4/5, not here. -->
+<!-- NOTE: Troubleshooting table uses 3 columns (Problem | Cause | Solution) — improvement over source scaffold's
+     2-column version, validated through prior pipeline experience. The Cause column prevents fix attempts
+     without diagnosis. -->
 
 ---
 title: "How to [Accomplish Specific Task]"
@@ -22,6 +26,7 @@ status: draft
 <!-- IRON LAW: Assume competence. The reader knows what they want. Get them there. -->
 <!-- IRON LAW: No teaching. No explaining why. Only showing how. -->
 <!-- IRON LAW: Every step is an action. Not a concept. Not background. An action. -->
+<!-- CONTRACT: "If you do this, you will get that." — guaranteed when followed correctly. -->
 
 This guide shows you how to [specific outcome in one sentence].
 
@@ -35,7 +40,7 @@ This guide shows you how to [specific outcome in one sentence].
 Ensure you have:
 
 - [Practical requirement — specific access, permission, or existing configuration]
-- [State the system must be in: "A volume group with at least 500M free space"]
+- [State the system must be in: e.g., "A volume group with at least 500M free space"]
 
 ---
 
@@ -43,7 +48,7 @@ Ensure you have:
 
 ### 1. [First Action — imperative verb + object]
 
-<!-- Direct. Imperative mood. No narrative. -->
+<!-- Direct. Imperative mood. No narrative. No teaching. -->
 
 [Action instruction — one sentence, imperative.]
 
@@ -51,10 +56,8 @@ Ensure you have:
 [exact command]
 ```
 
-<!-- Brief contextual note ONLY if blocking failure is likely — one sentence maximum. -->
-<!-- Format: a blockquote or inline note, NOT a paragraph of explanation. -->
-
-> **Note:** [Brief practical warning if and only if omitting it causes blocking failure.]
+<!-- Brief contextual note ONLY if omitting it causes blocking failure — one sentence maximum. -->
+> **Note:** [Brief practical warning only if blocking failure is likely — otherwise delete this line.]
 
 ---
 
@@ -78,7 +81,9 @@ If you want [variation B], use:
 
 ### 3. [Third Action]
 
-[Continue pattern: action + command. No explanation. No theory.]
+<!-- Continue pattern: action + command. No explanation. No theory. -->
+
+[Action instruction.]
 
 ```bash
 [exact command]
@@ -98,8 +103,8 @@ If you want [variation B], use:
 
 ## Verification
 
-<!-- How do they know it worked? Always present. Never skip. -->
-<!-- The exam grades system state. Train this habit in every how-to. -->
+<!-- Always present. Never skip. -->
+<!-- The exam grades system state. This trains the right habit. -->
 
 To confirm [task] completed successfully:
 
@@ -117,8 +122,8 @@ Expected result:
 
 ## Troubleshooting
 
-<!-- Optional but strongly recommended. Common, predictable issues only. -->
-<!-- Not comprehensive. If the issue is rare or complex, link elsewhere. -->
+<!-- Common, predictable issues only. Three columns: Problem | Cause | Solution. -->
+<!-- The Cause column prevents blind fix attempts — forces diagnosis before action. -->
 
 | Problem | Cause | Solution |
 |---|---|---|
@@ -129,22 +134,20 @@ Expected result:
 
 ## Related
 
-<!-- Link to companion documents. Close the loop. -->
-
 - [Link to Reference: complete options and parameters]
 - [Link to Explanation: understand why this works]
 - [Link to related How-to if applicable]
 
 ---
-<!-- CONTAMINATION CHECK BEFORE PUBLISHING:
+<!-- CONTAMINATION CHECK BEFORE PUBLISHING (Diataxis purity only — platform checks are Stage 4/5):
   [ ] Title begins "How to..."
   [ ] Every step is an action, not a concept
   [ ] Zero explanation paragraphs ("this works because...")
   [ ] Zero complete reference tables (brief inline notes only)
-  [ ] Verification step present
+  [ ] Verification step present with exact expected output
   [ ] No tutorial narrative ("now that we have...")
   [ ] No "you should understand" language
-  [ ] GitBook version: numbered steps with {% hint %} for warnings
-  [ ] iximiuz version: verification tasks in ::simple-task components
-  [ ] iximiuz version: all Diataxis frontmatter stripped before push
+  [ ] Troubleshooting table present (3 columns: Problem | Cause | Solution)
+  [ ] No iximiuz MDC components (::simple-task etc.) — platform formatting is Stage 4/5
+  [ ] No GitBook liquid blocks ({% hint %} etc.) — platform formatting is Stage 4/5
 -->
