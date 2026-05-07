@@ -265,38 +265,11 @@ In this pipeline, Diataxis quadrant determines both platform destination and doc
 
 ---
 
-## Quality Gate — "Done" for Each Quadrant
+## Quality Gate
 
-A document passes quality gate when:
+**Single source of truth:** `_config/quality-checks.md`
 
-**Tutorial:**
-- [ ] Every step has a visible expected output
-- [ ] Zero alternative paths
-- [ ] Zero explanation paragraphs
-- [ ] "We" language throughout
-- [ ] "What we accomplished" closes the loop
-- [ ] Links to How-to, Explanation, Reference
-
-**How-to:**
-- [ ] Title begins "How to..."
-- [ ] Every step is an action
-- [ ] Zero concept explanation
-- [ ] Verification step present
-- [ ] Troubleshooting table present
-
-**Reference:**
-- [ ] Title names subject neutrally
-- [ ] Parameters table present (if applicable)
-- [ ] Zero instructions ("to use X, do Y")
-- [ ] Zero opinion
-- [ ] Consistent structure with other Reference docs
-
-**Explanation:**
-- [ ] Title passes "about X" test
-- [ ] Passes "read in bath" test — no terminal needed
-- [ ] Zero step-by-step procedures
-- [ ] Trade-offs and alternatives discussed
-- [ ] Links to How-to for practical action
+The complete pass/fail checklists for all four quadrants, cross-document integrity, and failure routing live in `_config/quality-checks.md`. Do not use any other checklist. Using this file for quality gate decisions risks using outdated criteria.
 
 ---
 

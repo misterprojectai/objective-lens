@@ -90,13 +90,12 @@ If a check fails: fix the document, re-run all checks for that quadrant, then pr
 | Link to Explanation | |
 | Link to Reference | |
 
-### Platform Readiness
+### Platform Readiness (Stage 3 scope only)
 
 | Check | Pass Criteria | Result |
 |---|---|---|
-| No platform formatting | Zero `{% stepper %}`, `{% hint %}`, `::simple-task` — content layer only | |
-| No iximiuz frontmatter | `kind: tutorial` not present — added in Stage 5 | |
-| No internal Diataxis frontmatter stripped | `type`, `quadrant`, `version`, `status` present for pipeline tracking | |
+| No platform formatting in content | Zero `{% stepper %}`, `{% hint %}`, `::simple-task` in body text — platform formatting applied in Stage 4/5 | |
+| Internal Diataxis frontmatter present | `type`, `quadrant`, `version`, `status` fields present — pipeline tracking metadata | |
 
 **TUTORIAL GATE: All checks Pass → proceed to Stage 4**
 
@@ -137,12 +136,12 @@ If a check fails: fix the document, re-run all checks for that quadrant, then pr
 | Link to Reference | |
 | Link to Explanation | |
 
-### Platform Readiness
+### Platform Readiness (Stage 3 scope only)
 
 | Check | Pass Criteria | Result |
 |---|---|---|
-| No platform formatting | Zero `{% hint %}`, `::simple-task` — content layer only | |
-| No iximiuz frontmatter | `kind: tutorial` not present — added in Stage 5 | |
+| No platform formatting in content | Zero `{% hint %}`, `::simple-task` in body text — platform formatting applied in Stage 4/5 | |
+| Internal Diataxis frontmatter present | `type`, `quadrant`, `version`, `status` fields present — pipeline tracking metadata | |
 
 **HOW-TO GATE: All checks Pass → proceed to Stage 4**
 
@@ -186,12 +185,12 @@ If a check fails: fix the document, re-run all checks for that quadrant, then pr
 | Link to Explanation | |
 | Link to How-to | |
 
-### Platform Readiness
+### Platform Readiness (Stage 3 scope only)
 
 | Check | Pass Criteria | Result |
 |---|---|---|
-| No platform formatting | Zero `{% %}` blocks — content layer only | |
-| GitBook only — no iximiuz frontmatter needed | Confirm `kind: tutorial` absent | |
+| No platform formatting in content | Zero `{% %}` blocks in body text — platform formatting applied in Stage 4 | |
+| Internal Diataxis frontmatter present | `type`, `quadrant`, `version`, `status` fields present — pipeline tracking metadata | |
 
 **REFERENCE GATE: All checks Pass → proceed to Stage 4**
 
@@ -209,7 +208,8 @@ Run after all four documents pass their individual gates.
 | All cross-links reciprocal | If Tutorial links to Explanation, Explanation links back to Tutorial | |
 | Exam objective consistent | All four documents reference the same `exam_objective` in frontmatter | |
 | No placeholder text remaining | Zero `[placeholder]` or `[fill this in]` in any document | |
-| No guidance comments in output | All `<!-- COMMENT -->` lines removed from published files | |
+| Template guidance comments stripped | All `<!-- PURPOSE:`, `<!-- IRON LAW:`, `<!-- COMPASS CHECK:`, `<!-- CONTAMINATION CHECK` comment blocks removed | |
+| Source attribution preserved | `<!-- Source: [filename] -->` comments retained — required for traceability | |
 
 **CROSS-DOCUMENT GATE: All checks Pass → Stage 3 complete, hand off to Stage 4**
 

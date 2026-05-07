@@ -92,7 +92,7 @@ Derive the Reference from the completed Explanation. Ask: what machinery (comman
 
 ### Step 6: Run Contamination Check on All Four Documents
 
-For each completed document, apply the contamination checklist from `_config/diataxis-rules.md` → "Quality Gate" section.
+For each completed document, apply the per-document pass/fail checklists from `_config/quality-checks.md`. Load the relevant quadrant section for each document.
 
 For any contamination found:
 - **Do not delete the content.** Extract it and route it to the correct document.
@@ -131,10 +131,13 @@ x200_101_shell-prompt_reference.md
 
 **Must NOT include in any file:**
 - Unfilled template placeholders
-- Guidance comments from the template (lines beginning with `<!-- `)
+- Template guidance comments — strip blocks beginning with `<!-- PURPOSE:`, `<!-- IRON LAW:`, `<!-- COMPASS CHECK:`, `<!-- CONTAMINATION CHECK`
 - Content from a different quadrant
 - Platform-specific formatting (no `{% stepper %}`, no `::simple-task` — that is Stage 4/5 work)
 - Confidence reports or self-assessment scores embedded in the content body
+
+**Must PRESERVE in every file:**
+- Source attribution comments from Stage 2 (`<!-- Source: [filename] -->`) — required for traceability back to original sources
 
 ---
 
