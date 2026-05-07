@@ -1,0 +1,254 @@
+1
+00:00:06,580 --> 00:00:08,929
+In this video we'll
+talk about bash startup files.
+
+2
+00:00:10,169 --> 00:00:11,070
+There's a
+couple of them.
+
+3
+00:00:11,570 --> 00:00:17,675
+It starts with etcenvironment, which contains a list of variables.
+And it's the first file that is processed while starting
+
+4
+00:00:17,675 --> 00:00:23,780
+bash on Reddit. It's not used, so you will
+find it as an empty file. By the way, Etc.
+
+5
+00:00:23,839 --> 00:00:27,109
+Profile is an important file
+that is executed while users login.
+
+6
+00:00:27,670 --> 00:00:31,489
+And in etc profile you will find
+a configuration that applies to all users.
+
+7
+00:00:32,750 --> 00:00:38,670
+ETCprofile D is used as a drop
+in directory that contains additional configuration files.
+
+8
+00:00:39,950 --> 00:00:45,600
+Now there are alternatives for the system
+wide etc profile like the bashprofile in
+
+9
+00:00:45,600 --> 00:00:51,250
+the user home directory which can
+be used as a user specific version.
+
+10
+00:00:52,310 --> 00:00:57,670
+Also convenient is bashlogout that's
+processed when a user logs out.
+
+11
+00:00:58,320 --> 00:01:04,480
+So if you want to make sure that some cleanup is happening all
+the time when a user logs out, make sure to tweak it right here.
+
+12
+00:01:05,700 --> 00:01:10,000
+And then there is etc bashrc
+that's closely related to Etc profile.
+
+13
+00:01:10,579 --> 00:01:13,420
+Etc profile is
+executed while users login.
+
+14
+00:01:14,000 --> 00:01:18,400
+An Etc BASHRC is processed every
+time a sub shell is started.
+
+15
+00:01:18,900 --> 00:01:24,250
+Now what is the difference? Well, sometimes
+in a distribution it's configured in a
+
+16
+00:01:24,250 --> 00:01:29,599
+way that there's not really a difference.
+But bashrc is used in a subshell.
+
+17
+00:01:29,600 --> 00:01:34,950
+So within your current session you
+type bash then etc bashrc is included.
+
+18
+00:01:35,290 --> 00:01:37,909
+An etc profile is only
+when you are logging in.
+
+19
+00:01:38,829 --> 00:01:43,590
+Now you can use a
+user specific file with the name
+
+20
+00:01:43,590 --> 00:01:48,349
+tilde bashrc to store user
+specific content. Let's have a look.
+
+21
+00:01:49,590 --> 00:01:55,543
+So let me start with less on
+etc profile and there we can see etc
+
+22
+00:01:55,543 --> 00:02:01,496
+profile. And the most important thing that
+I want you to realize is that really
+
+23
+00:02:01,496 --> 00:02:07,450
+it's a complex shell script with components
+that you probably don't want to mess up.
+
+24
+00:02:08,770 --> 00:02:14,723
+Here for instance we have the history size variable
+and that's embedded in a conditional loop. So what
+
+25
+00:02:14,723 --> 00:02:20,676
+do we have in a conditional loop? Well, that
+is using a test zhist size, which means if
+
+26
+00:02:20,676 --> 00:02:26,629
+you don't have a variable hist size then
+we to set the his size to 1000.
+
+27
+00:02:28,289 --> 00:02:34,000
+Now really consider this etc profile a read
+only file if you want to modify it.
+
+28
+00:02:34,539 --> 00:02:39,379
+Etcprofile D is what you want
+to use for the drop in files.
+
+29
+00:02:39,960 --> 00:02:45,585
+You can see drop in files with
+the extension csh Ignore them. In a
+
+30
+00:02:45,585 --> 00:02:51,210
+bash environment it's the files with the
+extension sh which are executed by bash.
+
+31
+00:02:52,039 --> 00:02:56,986
+But here also these files are typically
+pretty complex and you shouldn't mess with
+
+32
+00:02:56,986 --> 00:03:01,933
+them. But if ever you want to
+change something and add configuration, you can
+
+33
+00:03:01,933 --> 00:03:06,879
+put it right here and it will
+be executed for all of you users.
+
+34
+00:03:07,960 --> 00:03:13,639
+How about the bashrc? Well, in the
+bash RC we have all of this.
+
+35
+00:03:15,500 --> 00:03:21,840
+The difference is that this is system wide
+functions and environment stuff goes in etc profile.
+
+36
+00:03:22,580 --> 00:03:28,419
+But probably the most important thing is that
+you should not change the contents of this file.
+
+37
+00:03:28,939 --> 00:03:35,454
+If ever you want to apply
+system wide settings, you use a custom
+
+38
+00:03:35,454 --> 00:03:41,968
+SH script in etcprofile D. So
+let me show you. I'm going into
+
+39
+00:03:41,967 --> 00:03:48,481
+the etcprofile d and I am
+going to use sudo vim custom sh
+
+40
+00:03:48,481 --> 00:03:54,996
+and in my custom sh I'm
+using alias list is LS l and
+
+41
+00:03:54,995 --> 00:04:01,509
+I'm using export. Color is green
+and that's what I'm going to quit.
+
+42
+00:04:01,930 --> 00:04:08,830
+And from now on, the next time that these files are
+processed, the custom SH is going to be processed as well.
+
+43
+00:04:09,449 --> 00:04:15,449
+I would recommend don't worry about shells
+and sub shells, just start your terminal again.
+
+44
+00:04:16,810 --> 00:04:21,509
+Once you have started your terminal again you
+can check out what is is going on.
+
+45
+00:04:22,449 --> 00:04:29,166
+So what happens when I type list?
+Now look at that, my list command is
+
+46
+00:04:29,166 --> 00:04:35,883
+working and Echo$Co do we have it?
+Well we have multiple variables starting with co
+
+47
+00:04:35,883 --> 00:04:42,600
+and color is giving me green
+and that shows how it's normally processed.
+
+48
+00:04:43,339 --> 00:04:47,269
+Then there are these
+hidden files in the user
+
+49
+00:04:47,269 --> 00:04:51,199
+home directory, bashprofile and
+bashrc and likewise the bashlogout.
+
+50
+00:04:52,879 --> 00:04:59,154
+Normally you won't find too much in these configuration
+files, but if there is anything you want to do
+
+51
+00:04:59,154 --> 00:05:05,429
+for your users, you can put it right here.
+And that's how these shell startup files can be used.

@@ -1,0 +1,414 @@
+1
+00:00:06,580 --> 00:00:12,310
+In this video, I'll tell you about Secure Shell. That's
+a solution that allows you to connect to a remote server.
+
+2
+00:00:13,750 --> 00:00:18,089
+So in order to connect to a
+remote server, you need the SSH process
+
+3
+00:00:18,089 --> 00:00:22,429
+to be up and running, because
+without this process, there's no remote access.
+
+4
+00:00:23,510 --> 00:00:28,250
+Typically, if you're on a desktop, you probably
+have to install and enable the SSH server.
+
+5
+00:00:29,050 --> 00:00:35,163
+So to install it on Ubuntu you would
+use sudo apt install openssh server and on
+
+6
+00:00:35,163 --> 00:00:41,276
+CentOS you need to use sudo dnf install
+openssh server as well as sudo systemctl enable
+
+7
+00:00:41,276 --> 00:00:47,390
+now ssh d to activate the server
+and to flag it for an automatic restart.
+
+8
+00:00:48,890 --> 00:00:55,469
+After doing so, use systemctl status SSHD
+to verify that the SSH server is running.
+
+9
+00:00:56,549 --> 00:01:01,329
+And if this doesn't work because
+you don't have systemctl, you can try
+
+10
+00:01:01,329 --> 00:01:06,109
+Service SSHD status. That's the old
+way of verifying that services are running.
+
+11
+00:01:07,790 --> 00:01:11,719
+So here we are on an Ubuntu
+system, and I want to show you
+
+12
+00:01:11,719 --> 00:01:15,650
+that we need to do some work.
+Before on Ubuntu you have SSH access.
+
+13
+00:01:16,150 --> 00:01:22,822
+So starting with sudo systemctl status ssh
+that is querying the systemd service. And as
+
+14
+00:01:22,822 --> 00:01:29,495
+you can see, systemctl status ssh, likewise
+for SSH D is giving me unit SSH
+
+15
+00:01:29,495 --> 00:01:36,167
+service could not be found. That's because
+this is an Ubuntu desktop and it's not
+
+16
+00:01:36,167 --> 00:01:42,840
+installed. So I need sudo apt
+install openssh server to install it.
+
+17
+00:01:43,560 --> 00:01:46,359
+That is giving me an overview.
+And yes, I want to install it.
+
+18
+00:01:46,980 --> 00:01:51,159
+And we need to wait for
+a minute and then the OpenSSH
+
+19
+00:01:51,159 --> 00:01:55,340
+server package is installed and
+it should also be automatically enabled.
+
+20
+00:01:56,299 --> 00:01:58,500
+Let me do
+the systemctl status again.
+
+21
+00:01:59,219 --> 00:02:05,984
+And that is showing me what? Well, it's showing me
+that it is loaded and the preset is enabled. That means
+
+22
+00:02:05,984 --> 00:02:12,750
+that after a reboot it will automatically come back and
+it is triggered by SSH socket. Well, that's good enough.
+
+23
+00:02:13,069 --> 00:02:16,814
+That means that something
+is listening on Port
+
+24
+00:02:16,814 --> 00:02:20,560
+22 and my Ubuntu
+machine is now reachable.
+
+25
+00:02:21,729 --> 00:02:25,419
+In order to reach it, I
+need IPA to find the IP address.
+
+26
+00:02:25,599 --> 00:02:28,039
+And there I can see
+that my IP address is 192.168.29.1.38.
+
+27
+00:02:28,080 --> 00:02:29,620
+That's what I'm going to
+use next from the SSH client.
+
+28
+00:02:36,189 --> 00:02:38,250
+So how does that
+work, this SSH client?
+
+29
+00:02:38,930 --> 00:02:42,270
+Well, an SSH client is what
+you need to access the SSH server.
+
+30
+00:02:43,159 --> 00:02:46,860
+On Linux and macOS, it's very
+easy. You use the native command line
+
+31
+00:02:46,860 --> 00:02:50,560
+ssh client that's just a command
+that you run from a terminal.
+
+32
+00:02:51,659 --> 00:02:55,340
+On Windows, you need an
+external program. Mobile xterm is commonly
+
+33
+00:02:55,340 --> 00:02:59,020
+used, but maybe in your
+environment something else is used.
+
+34
+00:03:01,060 --> 00:03:05,210
+By default, if you use the
+SSH command line client, you use the
+
+35
+00:03:05,210 --> 00:03:09,360
+local user account. So you try
+the same username on the remote server.
+
+36
+00:03:10,479 --> 00:03:16,939
+If you want to use a different user account, you
+can use SSH userostname to connect as that specific user.
+
+37
+00:03:18,520 --> 00:03:25,423
+While you are using ssh, a specific command can
+be specified as an argument, like SSH LISA at
+
+38
+00:03:25,423 --> 00:03:32,326
+remote host who am I? For instance, do notice
+if you are running commands that there's a difference
+
+39
+00:03:32,326 --> 00:03:39,229
+between the following two commands. So, SSH user hostname
+who am I greater than? Greater than who fell?
+
+40
+00:03:39,509 --> 00:03:45,310
+In SSH user hostname SH C who
+am I greater than? Greater than who fell?
+
+41
+00:03:45,949 --> 00:03:52,615
+Does that sound familiar? Of course it does. We have
+seen the same behavior if you run a command as
+
+42
+00:03:52,615 --> 00:03:59,280
+an argument to the sudo command and there's a shell
+metacharacter like a redirect or a pipe inside the command.
+
+43
+00:03:59,840 --> 00:04:01,639
+Before moving on,
+let me demonstrate.
+
+44
+00:04:02,900 --> 00:04:07,310
+I'm going to use
+SSH student at 192168 29138.
+
+45
+00:04:12,610 --> 00:04:14,210
+And then
+we get this.
+
+46
+00:04:14,729 --> 00:04:15,250
+What
+is this?
+
+47
+00:04:15,849 --> 00:04:21,600
+Well, this is the first time I'm connecting with a remote host,
+and that means that my local client doesn't know this remote host.
+
+48
+00:04:22,259 --> 00:04:27,240
+Next time that I'm connecting with this remote
+host, we want to do an additional security check.
+
+49
+00:04:27,800 --> 00:04:31,399
+And in order to do so, we
+have the remote host key fingerprint, and
+
+50
+00:04:31,399 --> 00:04:35,000
+that remote host key fingerprint is what
+you see on the screen right here.
+
+51
+00:04:35,620 --> 00:04:40,914
+It's telling me it doesn't know about this key fingerprint.
+And it's asking me if I want to store it. And
+
+52
+00:04:40,914 --> 00:04:46,209
+yes, I want to store it so that next time
+we can verify verify the identity of the remote host.
+
+53
+00:04:47,170 --> 00:04:52,534
+Now it's asking for the remote user password.
+So I'm entering the remote user password, and
+
+54
+00:04:52,534 --> 00:04:57,899
+look at that. Here I am on my
+Ubuntu machine telling me, welcome to Ubuntu 2410.
+
+55
+00:04:58,600 --> 00:05:02,060
+So everything I'm doing right
+here is on the Ubuntu machine.
+
+56
+00:05:02,699 --> 00:05:09,050
+So do whatever you want. And once you are done,
+you type exit to return to your main operating system.
+
+57
+00:05:10,240 --> 00:05:12,889
+Related to the SSH
+command there is scp.
+
+58
+00:05:13,649 --> 00:05:16,220
+SCP allows you
+to securely copy files.
+
+59
+00:05:17,920 --> 00:05:21,590
+SCP is a convenient tool that
+allows you to copy files from
+
+60
+00:05:21,590 --> 00:05:25,259
+the local computer to the remote
+computer, or the other way around.
+
+61
+00:05:26,620 --> 00:05:32,295
+The basic command structure is SCP
+etchost followed by the remote host IP
+
+62
+00:05:32,295 --> 00:05:37,970
+address colon some directories. So this
+would copy to the TMP directory.
+
+63
+00:05:38,629 --> 00:05:43,009
+The only condition for SCP to work is that
+your SSH server needs to be up and running.
+
+64
+00:05:44,290 --> 00:05:47,865
+As an alternative to
+scp, rsync is commonly used
+
+65
+00:05:47,865 --> 00:05:51,439
+and rsync uses the
+SSH server to synchronize files.
+
+66
+00:05:52,279 --> 00:05:55,019
+SAP is just a dumb
+copy, it doesn't analyze anything.
+
+67
+00:05:55,579 --> 00:06:00,465
+Rsync synchronizes and that means that if
+there are parts that didn't change, these
+
+68
+00:06:00,465 --> 00:06:05,350
+parts will not be synchronized at
+all. And that makes it more efficient.
+
+69
+00:06:06,649 --> 00:06:11,050
+So you can use rsync for
+directories and SCP for individual files.
+
+70
+00:06:12,129 --> 00:06:17,960
+You use a command like rsync AV
+progress. That's nice because you will see a
+
+71
+00:06:17,960 --> 00:06:23,790
+progress indicator followed by documents, which in
+this case will be the local directory.
+
+72
+00:06:24,670 --> 00:06:30,120
+Studentremote is identifying as which
+user on which system and
+
+73
+00:06:30,120 --> 00:06:35,569
+home student that will synchronize
+it to the remote system.
+
+74
+00:06:36,829 --> 00:06:37,430
+Let me
+show you.
+
+75
+00:06:38,170 --> 00:06:42,435
+So I'm starting with an SCP
+etchosts 219-216-829138 tmp and that will copy
+
+76
+00:06:42,435 --> 00:06:46,699
+over the host file to the
+TMP directory on the remote host.
+
+77
+00:06:55,129 --> 00:06:59,870
+Then I'm going into documents and I
+want to create a couple of files.
+
+78
+00:07:00,569 --> 00:07:06,113
+So val1 up to
+100.txt and that's a lot
+
+79
+00:07:06,113 --> 00:07:11,656
+of vals. And now
+we are going to use
+
+80
+00:07:11,656 --> 00:07:17,199
+rsync. So rsync minus
+AV progress on documents.
+
+81
+00:07:17,779 --> 00:07:22,550
+And I want to synchronize
+two students at 192.168.29.1.38 home student.
+
+82
+00:07:29,959 --> 00:07:35,100
+Then we need the password of the remote user
+and there we can see that it has been synchronized.
+
+83
+00:07:35,939 --> 00:07:42,509
+So this shows how SCP can be used to copy
+individual files and rsync can be used to synchronize complete directories.

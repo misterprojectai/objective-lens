@@ -1,0 +1,64 @@
+1
+00:00:06,620 --> 00:00:10,769
+It is good to see the shell in the
+context of how an operating system is typically organized.
+
+2
+00:00:11,529 --> 00:00:13,009
+So it all
+starts with the hardware.
+
+3
+00:00:15,849 --> 00:00:18,070
+The hardware in your computer
+is what you want to use.
+
+4
+00:00:18,989 --> 00:00:24,390
+Now the main layer to interface the
+hardware is the kernel and the kernel is
+
+5
+00:00:24,390 --> 00:00:29,789
+using drivers, also known as kernel modules
+that allow you to communicate with the hardware.
+
+6
+00:00:30,539 --> 00:00:33,210
+But the kernel by itself
+is inaccessible for the user.
+
+7
+00:00:33,909 --> 00:00:37,780
+And that is why in order to
+provide the user interface there is a shell.
+
+8
+00:00:38,679 --> 00:00:44,119
+So at any time you type commands, you type your
+commands right here. So this is the world of the user.
+
+9
+00:00:45,439 --> 00:00:49,314
+Now the shell needs to send
+instructions to the kernel and there is
+
+10
+00:00:49,314 --> 00:00:53,189
+a very important component involved here
+and that is C library libc.
+
+11
+00:00:53,789 --> 00:00:59,284
+And the C library provides system
+calls and these system calls are low
+
+12
+00:00:59,284 --> 00:01:04,780
+level system instructions that allow your
+shell to communicate with the kernel.
+
+13
+00:01:05,319 --> 00:01:08,079
+And that is how commands are
+dealt with in a Linux environment.

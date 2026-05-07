@@ -1,0 +1,119 @@
+1
+00:00:06,559 --> 00:00:08,259
+There are more
+Bash features that matter.
+
+2
+00:00:09,039 --> 00:00:13,019
+For instance, there is Alias. Alias
+allows you to define your own commands.
+
+3
+00:00:13,720 --> 00:00:17,434
+So if you would type
+Alias, list is LS l,
+
+4
+00:00:17,434 --> 00:00:21,149
+then you have defined your
+new command, which is list.
+
+5
+00:00:22,390 --> 00:00:26,454
+You can use Alias without arguments to
+request a list of aliases that are
+
+6
+00:00:26,454 --> 00:00:30,519
+currently set when set from the
+command line. An alias is not persistent.
+
+7
+00:00:31,039 --> 00:00:34,724
+If you want to make them persistent,
+you need to put them in the
+
+8
+00:00:34,724 --> 00:00:38,409
+ETC profile or one of the
+related files. We'll talk about those later.
+
+9
+00:00:39,750 --> 00:00:44,420
+Bash also works with keyboard shortcuts,
+and these keyboard shortcuts make working
+
+10
+00:00:44,420 --> 00:00:49,090
+with Bash a lot easier.
+Control L will clear your screen.
+
+11
+00:00:49,619 --> 00:00:54,679
+Control U will wipe the current command line. Control
+A will move the cursor to the beginning of
+
+12
+00:00:54,679 --> 00:00:59,740
+the line, and Control E is doing the
+opposite. It moves to the end of the line.
+
+13
+00:01:00,399 --> 00:01:06,780
+Control C is the break, it interrupts the current
+process. And Control D is a generic exit command.
+
+14
+00:01:08,000 --> 00:01:09,090
+Let me show
+you some of this.
+
+15
+00:01:10,560 --> 00:01:15,659
+That was Control L to start with. I
+do it in conscious. I wasn't even thinking about
+
+16
+00:01:15,659 --> 00:01:20,759
+it. Here we have Alias, which is showing
+all the aliases that exist on my system.
+
+17
+00:01:21,109 --> 00:01:27,092
+So when I use Alias, list is
+LS L. Well then I can type
+
+18
+00:01:27,092 --> 00:01:33,075
+the list command to execute the LS
+L. Let's do a Control L again
+
+19
+00:01:33,075 --> 00:01:39,057
+and let me use Sleep 600, which
+is going to do nothing for 10
+
+20
+00:01:39,057 --> 00:01:45,040
+minutes, but it will keep my
+console busy. Well, I don't like that.
+
+21
+00:01:45,159 --> 00:01:49,859
+So I'm going to use Control
+C to quit it and echo.
+
+22
+00:01:50,719 --> 00:01:57,549
+This is some text and oh boy, I forgot something. Well
+then I'm going to use Ctrl A to move my cursor to
+
+23
+00:01:57,549 --> 00:02:04,379
+the beginning or Control E to move my cursor to the
+end. And if I change my mind and I don't want to
+
+24
+00:02:04,380 --> 00:02:11,210
+run this command at all, Control U will wipe the current
+command line. And that's the best shortcuts that you should know about.

@@ -1,0 +1,199 @@
+1
+00:00:06,559 --> 00:00:09,490
+While working with vals, you are
+going to use wildcards a lot.
+
+2
+00:00:10,689 --> 00:00:12,330
+So how
+about these wildcards?
+
+3
+00:00:13,130 --> 00:00:17,775
+Well, most VAL oriented commands support
+a couple of wildcards as in
+
+4
+00:00:17,775 --> 00:00:22,420
+lsastar where the star is for
+any character, no matter how many.
+
+5
+00:00:22,980 --> 00:00:26,649
+So lsastar will show all valves that
+have a name starting with an A.
+
+6
+00:00:28,420 --> 00:00:34,120
+Now we also have the question mark. And
+the question mark is for one single character no
+
+7
+00:00:34,120 --> 00:00:39,820
+matter which one. So LSA will show you
+vals that have a name that starts with an
+
+8
+00:00:39,820 --> 00:00:45,520
+A followed by at least one more
+character and followed by zero or more characters.
+
+9
+00:00:47,439 --> 00:00:53,855
+Next there is LSA square bracket NM square
+bracket is selector. So either n or m
+
+10
+00:00:53,855 --> 00:01:00,270
+followed by the wealth card between square brackets.
+You can also use a range of characters.
+
+11
+00:01:01,850 --> 00:01:08,596
+Many commands also support working with
+groups and ranges like Touchfell curly
+
+12
+00:01:08,596 --> 00:01:15,343
+braces 1100 which will create VAL1
+up to VAL100 or MKDIR data
+
+13
+00:01:15,343 --> 00:01:22,090
+curly braces account which will create
+data cells and also data account.
+
+14
+00:01:22,700 --> 00:01:23,310
+Let me
+show you.
+
+15
+00:01:25,799 --> 00:01:30,319
+So for more result I'm going to do this
+from the etc directory and I'm starting with an lsa.
+
+16
+00:01:32,680 --> 00:01:34,969
+And what do we see? Well,
+we see a couple of files.
+
+17
+00:01:35,650 --> 00:01:38,489
+Then we see directories
+with the matching name.
+
+18
+00:01:39,069 --> 00:01:42,140
+And for the directory with the matching
+name it shows all of the contents.
+
+19
+00:01:43,319 --> 00:01:50,200
+We also see an occasional Permission denied. Let's ignore that for now.
+That's because of the fact that I'm not using my root superpowers.
+
+20
+00:01:51,349 --> 00:01:56,739
+Now I want to fix this problem about the directories
+and their directory contents. How are we going to do that?
+
+21
+00:01:57,280 --> 00:02:02,245
+Well, by making that LS
+D A because D is
+
+22
+00:02:02,245 --> 00:02:07,210
+just showing the directory name
+and not the directory contents.
+
+23
+00:02:08,610 --> 00:02:10,060
+Now let me
+show you LS da.
+
+24
+00:02:15,490 --> 00:02:22,370
+What are we looking for? Well, we are
+looking for any item that follows a pattern starting
+
+25
+00:02:22,370 --> 00:02:29,250
+with an a followed by at least one
+character followed by a dot followed by other characters.
+
+26
+00:02:29,889 --> 00:02:31,750
+You can see that's giving
+a match on at deny.
+
+27
+00:02:34,669 --> 00:02:39,000
+Notice that a star would also
+have done that. But then you can
+
+28
+00:02:39,000 --> 00:02:43,330
+also see files that have a
+name with a dot somewhere later.
+
+29
+00:02:44,969 --> 00:02:46,099
+Then what
+is LS A?
+
+30
+00:02:48,530 --> 00:02:54,173
+Let's make that SU doing. Well, that's
+showing second character either an S or
+
+31
+00:02:54,173 --> 00:02:59,816
+a U. And if we make that
+S U, then we can see the
+
+32
+00:02:59,816 --> 00:03:05,460
+second character starting with an S up
+to a U and anything in between.
+
+33
+00:03:06,879 --> 00:03:08,780
+And this is what
+the result is looking like.
+
+34
+00:03:09,740 --> 00:03:13,159
+Now another one that I would
+like to show you is these ranges.
+
+35
+00:03:13,680 --> 00:03:20,555
+So touch foul curly brace 1.10
+and then I'm using my LS and
+
+36
+00:03:20,555 --> 00:03:27,430
+look at that. It has created
+Vals 1.10 let me remove that.
+
+37
+00:03:27,550 --> 00:03:28,530
+Remove
+vals.
+
+38
+00:03:30,930 --> 00:03:35,740
+Of course, I can specify the range here
+as well, but hey, I just want to
+
+39
+00:03:35,740 --> 00:03:40,550
+remove anything that has a name starting with
+vals. So the wildcard will work as well.
+
+40
+00:03:40,550 --> 00:03:45,360
+And that's how you can use wildcards
+as well as ranges while working with vals.

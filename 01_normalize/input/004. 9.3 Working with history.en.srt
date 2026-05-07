@@ -1,0 +1,174 @@
+1
+00:00:06,679 --> 00:00:09,449
+A very convenient feature
+of BASH is history.
+
+2
+00:00:10,429 --> 00:00:16,056
+Any command that you type is stored in history,
+and this history is updated to the bash history file
+
+3
+00:00:16,056 --> 00:00:21,683
+once you close your session. So anytime you exit,
+the history file is updated. And the next time you
+
+4
+00:00:21,683 --> 00:00:27,309
+open a new session, you still have access to
+the commands that were used in the previous session.
+
+5
+00:00:28,480 --> 00:00:32,060
+The history command is what you can
+use to repeat commands from this file.
+
+6
+00:00:32,740 --> 00:00:35,630
+Use history C to
+clear the current history.
+
+7
+00:00:36,149 --> 00:00:42,450
+Use history W to write the current history,
+which shouldn't be necessary because it's normally done automatically.
+
+8
+00:00:43,060 --> 00:00:47,079
+And use history D to
+delete a specific line from history.
+
+9
+00:00:47,899 --> 00:00:52,814
+Also, you can use control r for
+the reverse isearch exclamation mark for followed
+
+10
+00:00:52,814 --> 00:00:57,729
+by a number to repeat a specific
+line from history. Let me show you.
+
+11
+00:00:58,409 --> 00:01:02,799
+So let me start by
+using till on Tilde BASH history.
+
+12
+00:01:05,420 --> 00:01:10,659
+And what do we see? Well, we see
+the last couple of lines in my history
+
+13
+00:01:10,659 --> 00:01:15,900
+and oh, that is vim demo file
+and vim trial. That's a long time ago.
+
+14
+00:01:16,579 --> 00:01:22,700
+And you know why? Well, that is
+because I haven't closed my session since.
+
+15
+00:01:23,250 --> 00:01:28,799
+If I type history, I can see all the
+commands that I have typed so far if I
+
+16
+00:01:28,799 --> 00:01:34,349
+want to save them. I use history W
+to commit my current history to the history file.
+
+17
+00:01:34,909 --> 00:01:38,890
+Now, I like Control R.
+Control R is the reverse isearch.
+
+18
+00:01:39,989 --> 00:01:46,259
+In this reverse isearch, if I'm looking for the
+last awk command, for instance, I just type awk and
+
+19
+00:01:46,259 --> 00:01:52,530
+there we can see that it is searching backward
+for the last command where it has found awg.
+
+20
+00:01:53,730 --> 00:01:57,625
+Now, this reverse isearch is
+searching for a text pattern anywhere
+
+21
+00:01:57,625 --> 00:02:01,519
+in the command, not necessarily
+at the start of the command.
+
+22
+00:02:02,019 --> 00:02:06,085
+If you want to repeat it,
+you can use Control R and Ctrl
+
+23
+00:02:06,085 --> 00:02:10,150
+R and Ctrl R again until
+you found the command that you wanted.
+
+24
+00:02:11,229 --> 00:02:18,069
+What do we have here? That's a command that is
+not complete. So let me Control C that another convenient thing
+
+25
+00:02:18,069 --> 00:02:24,909
+that you can do in history is exclamation followed by
+a number. I'm using exclamation 416 to repeat command 417 again.
+
+26
+00:02:28,729 --> 00:02:31,129
+Look at that, my
+home directory has changed.
+
+27
+00:02:33,449 --> 00:02:36,129
+I didn't want that. So let's
+get back to my home directory.
+
+28
+00:02:37,009 --> 00:02:40,759
+There is one more thing that is convenient
+in history and that you need to know about.
+
+29
+00:02:41,319 --> 00:02:44,889
+And that is the way
+to remove commands from history.
+
+30
+00:02:45,530 --> 00:02:49,620
+I'm going to do that
+on the relatively innocent command 417.
+
+31
+00:02:52,270 --> 00:02:58,067
+So I'm using history D417 and you might
+be wondering, when do I ever need to
+
+32
+00:02:58,067 --> 00:03:03,865
+remove something from history? Well, that's very convenient
+if you did something really silly or if
+
+33
+00:03:03,865 --> 00:03:09,662
+you have entered a clear text password and
+you want to make sure that it is
+
+34
+00:03:09,662 --> 00:03:15,460
+not going to be saved. And that's
+how you work with history. Very convenient feature.
+
+35
+00:03:15,800 --> 00:03:17,539
+I'm sure you are going
+to like it a lot.

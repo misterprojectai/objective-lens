@@ -1,0 +1,174 @@
+1
+00:00:06,559 --> 00:00:10,130
+The next feature of the bash shell
+that you really should understand is the variable.
+
+2
+00:00:11,150 --> 00:00:14,449
+A variable is a label to
+which a dynamic value can be assigned.
+
+3
+00:00:15,490 --> 00:00:19,539
+Variables are convenient for scripting,
+and you define the variable
+
+4
+00:00:19,539 --> 00:00:23,589
+once and use in a
+flexible way in different environments.
+
+5
+00:00:24,410 --> 00:00:30,186
+What's the idea behind that? Well, if you create
+a script, you don't want hard coded values, you
+
+6
+00:00:30,186 --> 00:00:35,963
+want values to be defined in a variable, and
+the script will pick up the value from the
+
+7
+00:00:35,963 --> 00:00:41,740
+variable whenever it is running. And that is
+a nice way of making your scripts flexible.
+
+8
+00:00:42,259 --> 00:00:47,155
+But for now, let's not talk about scripts,
+let's talk about system variables. They contain default
+
+9
+00:00:47,155 --> 00:00:52,049
+settings that are used by Linux and there's
+a couple of them that are quite convenient.
+
+10
+00:00:52,549 --> 00:00:56,060
+Like the path variable, which
+contains a list of directories
+
+11
+00:00:56,060 --> 00:00:59,570
+that I search for
+binaries while executing a command.
+
+12
+00:01:00,729 --> 00:01:04,390
+I am writing $path, by the
+way, because if you want to get
+
+13
+00:01:04,390 --> 00:01:08,049
+the value of a variable, you
+put a dollar in front of it.
+
+14
+00:01:09,150 --> 00:01:13,049
+Another variable is dollar shell. Dollar shell
+is the current shell that is used.
+
+15
+00:01:14,109 --> 00:01:17,689
+Environment variables can be
+set for application use.
+
+16
+00:01:18,489 --> 00:01:22,009
+You use varname is
+value to define your variable,
+
+17
+00:01:22,009 --> 00:01:25,530
+and then you can
+use echo$varname to read.
+
+18
+00:01:26,409 --> 00:01:31,629
+Now, by default, variables are only known to the
+current shell. If you want to define a variable that
+
+19
+00:01:31,629 --> 00:01:36,849
+is known in subshells as well, you need to
+use export in front of it. Let me show you.
+
+20
+00:01:37,930 --> 00:01:42,250
+Let's start with env. Env is
+for env environment and that is
+
+21
+00:01:42,250 --> 00:01:46,569
+showing the environment variables that
+are in use by my system.
+
+22
+00:01:47,230 --> 00:01:53,805
+So echo dollar user, for instance, is giving my current
+user ID that student or echo dollar path, which is
+
+23
+00:01:53,805 --> 00:02:00,379
+giving a list of directories where the bash shell is
+checking for program files. When I run a program file.
+
+24
+00:02:00,939 --> 00:02:05,840
+Did I say the bash shell? Is that so? Well,
+let's use echo dollar shell. Yeah, it's the bash shell.
+
+25
+00:02:06,680 --> 00:02:12,534
+Now, variables are used as system variables
+and these are convenient. You can set them
+
+26
+00:02:12,534 --> 00:02:18,389
+yourself as well. Let's use color is
+red. That's how you define a variable.
+
+27
+00:02:18,789 --> 00:02:25,110
+Next, if I want to refer to the variable echo
+dollar color and there we can see the current value.
+
+28
+00:02:25,969 --> 00:02:32,365
+Now if I start a subshell, what is a subshell?
+Well, that's a process that started from the current environment.
+
+29
+00:02:32,365 --> 00:02:38,759
+I'm going to run bash as subshell and then I'm
+using echo dollar color and I don't see it anymore.
+
+30
+00:02:39,259 --> 00:02:44,394
+Let's get out of the subshell to
+the parent shell and let's define the variable
+
+31
+00:02:44,394 --> 00:02:49,529
+in a way that it also exists
+in the subshell. So export color is red.
+
+32
+00:02:50,139 --> 00:02:54,000
+And now I'm starting my subshell
+again in echo dollar color and
+
+33
+00:02:54,000 --> 00:02:57,860
+there we can see that
+it does exist in the subshell.
+
+34
+00:02:58,740 --> 00:03:04,094
+Now, setting variables yourself is not so useful
+if you're not going to use them. This particularly
+
+35
+00:03:04,094 --> 00:03:09,449
+makes sense when you are going to work
+with Bash shell scripts to automate tasks on Linux.

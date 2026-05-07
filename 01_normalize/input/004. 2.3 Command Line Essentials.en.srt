@@ -1,0 +1,164 @@
+1
+00:00:06,620 --> 00:00:09,279
+At this point, we are about
+ready to use the command line.
+
+2
+00:00:09,789 --> 00:00:12,570
+Let's talk about a
+couple of command line essentials.
+
+3
+00:00:14,109 --> 00:00:17,070
+First thing to realize is
+that Linux is case sensitive.
+
+4
+00:00:17,850 --> 00:00:22,980
+So if you see lowercase, you type lowercase
+because if you type uppercase it won't work.
+
+5
+00:00:23,620 --> 00:00:27,649
+Also, you should realize that there is
+an exception to any generic statement on Linux.
+
+6
+00:00:28,660 --> 00:00:34,600
+Linux is open source, and because
+of the decentralized development of different Linux
+
+7
+00:00:34,600 --> 00:00:40,539
+components, there are always exceptions to
+things that you consider to be true.
+
+8
+00:00:42,079 --> 00:00:47,100
+Let's use an example of how to
+quit an interactive interface. Sometimes you need
+
+9
+00:00:47,100 --> 00:00:52,120
+control C, sometimes you need Q, sometimes
+you need to type quit. It all
+
+10
+00:00:52,119 --> 00:00:57,140
+depends on the discretion of the
+open source developer behind the project.
+
+11
+00:00:58,750 --> 00:01:02,570
+Now, while you are working with
+commands, commands are often used with options.
+
+12
+00:01:03,890 --> 00:01:06,500
+And these options can
+be specified as long options.
+
+13
+00:01:07,019 --> 00:01:11,094
+And long options start
+with double hyphen. So Uname
+
+14
+00:01:11,094 --> 00:01:15,170
+Help is printing help
+for the Uname command.
+
+15
+00:01:16,510 --> 00:01:22,015
+There's also short options, and short options start
+with a single hyphen and they can be
+
+16
+00:01:22,015 --> 00:01:27,519
+defined. So instead of using LS l r
+minus T, you can also type LS lrt.
+
+17
+00:01:29,939 --> 00:01:32,109
+Linux commands typically
+have many options.
+
+18
+00:01:32,609 --> 00:01:38,560
+If you want to know about these many options, you
+use Help on any command to learn how to use it.
+
+19
+00:01:39,079 --> 00:01:39,659
+Let me
+show you.
+
+20
+00:01:40,980 --> 00:01:46,280
+Let's use the LS command as an example.
+If I type ls, then it works. If I
+
+21
+00:01:46,280 --> 00:01:51,579
+type LS in uppercase, then I'm getting command
+not found. But fortunately my shell is friendly enough
+
+22
+00:01:51,579 --> 00:01:56,879
+to tell me that it knows about
+similar commands, which is LS in all lowercase.
+
+23
+00:01:57,959 --> 00:01:59,219
+Now how
+about these options?
+
+24
+00:01:59,840 --> 00:02:06,310
+LS Help is giving me a list of all of the options
+and oh my goodness, that doesn't fit on the screen now does it?
+
+25
+00:02:06,810 --> 00:02:12,819
+If I scroll up a little bit, I can see all
+these options and as you can see, it's an entire Alphabet.
+
+26
+00:02:14,219 --> 00:02:20,495
+Now if you look at the l
+option, there we go. L uses a long
+
+27
+00:02:20,495 --> 00:02:26,770
+listing format, and it's kind of funny,
+L only exists as a short option.
+
+28
+00:02:27,289 --> 00:02:31,319
+There are also options like
+k for kibibytes that exist
+
+29
+00:02:31,319 --> 00:02:35,349
+as a short option as
+well as a long option.
+
+30
+00:02:36,250 --> 00:02:41,250
+So LS l K will show
+you kibibytes for all of the valves,
+
+31
+00:02:41,250 --> 00:02:46,250
+but you can also use LS
+l kibibytes to show the kibibytes value.
+
+32
+00:02:48,469 --> 00:02:49,969
+For now, I
+think that's enough.
+
+33
+00:02:50,620 --> 00:02:52,780
+Let's explore some more commands
+in the next couple of.
