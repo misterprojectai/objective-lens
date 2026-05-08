@@ -146,9 +146,11 @@ type mycommand
 
 Expected output:
 
+{% code title="Output" %}
 ```
 mycommand is /opt/myapp/bin/mycommand
 ```
+{% endcode %}
 {% endhint %}
 
 ## Troubleshooting
@@ -164,8 +166,10 @@ mycommand is /opt/myapp/bin/mycommand
 
 **New login shell does not pick up the change** Symptom: `exec bash --login` does not include the new directory Cause: `~/.bash_profile` was not saved, or the file contains a syntax error that aborted loading Fix: run `bash --login -c 'echo loaded'` — if it fails silently, check for syntax errors with:
 
-````bash
+```bash
 bash -n ~/.bash_profile
+```
+
 ---
 
 **Prepended directory is still searched after /usr/bin**
@@ -175,7 +179,7 @@ Fix: ensure the export contains `$PATH`:
 
 ```bash
 export PATH=/opt/myapp/bin:$PATH
-````
+```
 
 Not: `export PATH=/opt/myapp/bin`
 
