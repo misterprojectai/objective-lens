@@ -130,7 +130,14 @@ def check_file(fname):
     else:
         ok(label + ": no iximiuz MDC syntax (platform separation clean)")
 
-    # 8. All liquid blocks properly closed
+    # 8. Raw markdown fence balance check
+    fence_count = content.count("```")
+    if fence_count % 2 == 0:
+        ok(label + ": markdown fences balanced (" + str(fence_count) + ")")
+    else:
+        fail(label + ": unbalanced markdown fences (" + str(fence_count) + " — odd count means unclosed fence)")
+
+    # 9. All liquid blocks properly closed
     # Each tuple: (opener_pattern, closer_string, description)
     # opener_pattern uses str.count for exact matching where possible
     block_pairs = [

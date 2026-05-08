@@ -303,19 +303,80 @@ def strip_markdown_fence(text):
         text = re.sub(r'\n```\s*$', '', text)
     return text
 
+def strip_tutorial_preview_block(text):
+    """
+    Remove intro preview code blocks from tutorial output.
+
+    GitBook misparses --- as frontmatter or a horizontal rule when it appears
+    as content inside a fenced code block in the prose section before a stepper.
+    This breaks the block parser for the entire rest of the page.
+
+    The stepper demonstrates all expected output inline at each step, so the
+    intro preview is redundant. Remove it entirely.
+
+    Targets patterns like:
+      The final verification produces this single line:
+      ```
+      /bin/bash
+      ```
+    or:
+      The final verification step will produce this output:
+
+      ```
+      --- expansion demo complete ---
+      ...
+      ```
+    """
+    # Remove: prose sentence ending in colon, optional blank line, fenced block,
+    # optional blank line — but only in the intro (before the first stepper)
+    stepper_pos = text.find('{% stepper %}')
+    if stepper_pos == -1:
+        return text
+
+    intro = text[:stepper_pos]
+    rest  = text[stepper_pos:]
+
+    # Strip any fenced code block in the intro section
+    intro = re.sub(
+        r'(will produce this (output|single line|result)[^\n]*)\n\n```[^`]*```\n\n',
+        r'\1\n\n',
+        intro,
+        flags=re.DOTALL
+    )
+    # Also catch without blank lines
+    intro = re.sub(
+        r'(will produce this (output|single line|result)[^\n]*)\n```[^`]*```\n',
+        r'\1\n',
+        intro,
+        flags=re.DOTALL
+    )
+    return intro + rest
+
 # ── Sonnet caller with retry ──────────────────────────────────────────────────
 
 client = anthropic.Anthropic()
 
-def call_sonnet(system_prompt, source_doc, label):
+def call_sonnet(system_prompt, source_doc, label, file_map=None):
     print("  [" + label + "] Calling Sonnet 4.6...", end="", flush=True)
+
+    # Build file map context for explanation calls so Sonnet uses real filenames
+    # in content-ref blocks instead of inventing plausible-sounding paths.
+    file_map_section = ""
+    if file_map:
+        lines = ["\nThe following files exist in this objective\'s output directory.",
+                 "Use ONLY these exact filenames in any content-ref blocks you generate:\n"]
+        for link_text, path in file_map:
+            fname = os.path.basename(path)
+            lines.append("  " + fname + "  —  " + link_text.strip('"\'\' '))
+        file_map_section = "\n".join(lines) + "\n"
 
     user_prompt = (
         "Here is the Diataxis source document to transform:\n\n"
         "---BEGIN SOURCE---\n"
         + source_doc
         + "\n---END SOURCE---\n\n"
-        "Here is the complete GitBook block reference — read it fully before making any block decisions:\n\n"
+        + file_map_section
+        + "Here is the complete GitBook block reference — read it fully before making any block decisions:\n\n"
         + GITBOOK_BLOCK_REFERENCE
         + "\n\nTransform the source document into GitBook-formatted markdown. "
         "Reason carefully through which blocks best serve the learning experience "
@@ -475,12 +536,38 @@ def main():
     os.makedirs(output_dir, exist_ok=True)
     written = []
 
+    # Pre-build the full file map from discovered file lists so the explanation
+    # call has all real filenames available for content-ref blocks.
+    # This map mirrors what written[] will contain after all transforms complete.
+    def build_expected_file_map():
+        fmap = []
+        for fname in exp_files:
+            meta = extract_meta(read_file(os.path.join(source_dir, fname)))
+            fmap.append((meta.get("title", "Understanding the Shell"),
+                         os.path.join(output_dir, "explanation.md")))
+        for fname in ref_files:
+            meta = extract_meta(read_file(os.path.join(source_dir, fname)))
+            fmap.append((meta.get("title", "Command Reference"),
+                         os.path.join(output_dir, "reference.md")))
+        for i, fname in enumerate(tut_files, start=1):
+            meta = extract_meta(read_file(os.path.join(source_dir, fname)))
+            link = "Tutorial " + str(i) + ": " + meta.get("title", "Tutorial " + str(i))
+            fmap.append((link, os.path.join(output_dir, "tutorial_" + str(i).zfill(2) + ".md")))
+        for i, fname in enumerate(how_files, start=1):
+            meta = extract_meta(read_file(os.path.join(source_dir, fname)))
+            link = "How-to " + str(i) + ": " + meta.get("title", "How-to " + str(i))
+            fmap.append((link, os.path.join(output_dir, "howto_" + str(i).zfill(2) + ".md")))
+        return fmap
+
+    expected_file_map = build_expected_file_map()
+
     # ── Explanation ───────────────────────────────────────────────────────────
     print("── Explanation " + "─" * 60)
     for fname in exp_files:
         text     = read_file(os.path.join(source_dir, fname))
         meta     = extract_meta(text)
-        result   = call_sonnet(EXPLANATION_SYSTEM, text, "Explanation")
+        result   = call_sonnet(EXPLANATION_SYSTEM, text, "Explanation",
+                               file_map=expected_file_map)
         out_path = os.path.join(output_dir, "explanation.md")
         write_file(out_path, result)
         written.append((meta.get("title", "Understanding the Shell"), out_path))
@@ -505,6 +592,7 @@ def main():
         text      = read_file(os.path.join(source_dir, fname))
         meta      = extract_meta(text)
         result    = call_sonnet(TUTORIAL_SYSTEM, text, "Tutorial " + str(i).zfill(2))
+        result    = strip_tutorial_preview_block(result)
         out_path  = os.path.join(output_dir, "tutorial_" + str(i).zfill(2) + ".md")
         write_file(out_path, result)
         link_text = meta.get("title", "Tutorial " + str(i))
@@ -518,6 +606,7 @@ def main():
         text      = read_file(os.path.join(source_dir, fname))
         meta      = extract_meta(text)
         result    = call_sonnet(HOWTO_SYSTEM, text, "How-to " + str(i).zfill(2))
+        result    = strip_tutorial_preview_block(result)
         out_path  = os.path.join(output_dir, "howto_" + str(i).zfill(2) + ".md")
         write_file(out_path, result)
         link_text = meta.get("title", "How-to " + str(i))
