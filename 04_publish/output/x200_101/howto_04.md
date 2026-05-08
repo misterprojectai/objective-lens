@@ -1,20 +1,23 @@
 ---
-description: Search, select, edit, and re-execute previous Bash commands using history, Ctrl-R, and history expansion operators, and remove sensitive commands from history.
+description: >-
+  Search, select, edit, and re-execute previous Bash commands using history,
+  Ctrl-R, and history expansion operators, and remove sensitive commands from
+  history.
 icon: wrench
 ---
 
-# How to Use Command History to Recall and Re-execute Commands
+# How-to 4: Use Command History to Recall and Re-execute Commands
 
 {% hint style="info" %}
 **Prerequisites**
 
-- An active Bash shell session with a populated history list (at least several prior commands issued)
-- Write access to `~/.bash_history` (normal for any regular user or root in their own home directory)
+* An active Bash shell session with a populated history list (at least several prior commands issued)
+* Write access to `~/.bash_history` (normal for any regular user or root in their own home directory)
 {% endhint %}
 
 {% stepper %}
 {% step %}
-### Display the history list with line numbers
+#### Display the history list with line numbers
 
 Print the full history list to identify commands by number.
 
@@ -30,7 +33,7 @@ history 20
 {% endstep %}
 
 {% step %}
-### Re-execute a command by history number
+#### Re-execute a command by history number
 
 Run any command from the list using its history number.
 
@@ -42,7 +45,7 @@ Replace `42` with the number shown in the history list.
 {% endstep %}
 
 {% step %}
-### Re-execute the last command with `!!`
+#### Re-execute the last command with `!!`
 
 Repeat the immediately preceding command.
 
@@ -58,7 +61,7 @@ sudo !!
 {% endstep %}
 
 {% step %}
-### Re-execute the most recent command matching a string prefix
+#### Re-execute the most recent command matching a string prefix
 
 Run the last command that began with a given string.
 
@@ -74,7 +77,7 @@ Replace `ls` with the prefix that matches the command you want.
 {% endstep %}
 
 {% step %}
-### Search history interactively with Ctrl-R
+#### Search history interactively with Ctrl-R
 
 Press `Ctrl-R` at the prompt and type a search string to find the most recent matching command.
 
@@ -82,28 +85,28 @@ Press `Ctrl-R` at the prompt and type a search string to find the most recent ma
 (reverse-i-search)`cat': cat /etc/hostname
 ```
 
-- Press `Ctrl-R` again to cycle to the next older match.
-- Press `Enter` to execute the displayed command.
-- Press `Ctrl-G` to cancel the search without executing.
+* Press `Ctrl-R` again to cycle to the next older match.
+* Press `Enter` to execute the displayed command.
+* Press `Ctrl-G` to cancel the search without executing.
 {% endstep %}
 
 {% step %}
-### Recall and edit a command before executing
+#### Recall and edit a command before executing
 
 Use the Up arrow key to navigate to the command you want, then edit it on the command line before pressing Enter.
 
 To move within the recalled line:
 
-| Key | Action |
-|---|---|
-| `Ctrl-A` | Move cursor to beginning of line |
-| `Ctrl-E` | Move cursor to end of line |
-| `Ctrl-U` | Delete from cursor to beginning of line |
-| `Alt-B` / `Alt-F` | Move backward / forward one word |
+| Key               | Action                                  |
+| ----------------- | --------------------------------------- |
+| `Ctrl-A`          | Move cursor to beginning of line        |
+| `Ctrl-E`          | Move cursor to end of line              |
+| `Ctrl-U`          | Delete from cursor to beginning of line |
+| `Alt-B` / `Alt-F` | Move backward / forward one word        |
 {% endstep %}
 
 {% step %}
-### Substitute a string in the previous command with `^`
+#### Substitute a string in the previous command with `^`
 
 Correct a typo or change one token in the last command without retyping the whole line.
 
@@ -119,7 +122,7 @@ Example — if you just ran `cat /etc/hostnam`, correct it with:
 {% endstep %}
 
 {% step %}
-### Delete a specific entry from history
+#### Delete a specific entry from history
 
 Remove a single history entry by its line number to prevent sensitive commands from persisting.
 
@@ -134,6 +137,7 @@ After each deletion, line numbers of subsequent entries shift. Run `history` aga
 {% endhint %}
 
 <details>
+
 <summary>Deleting a range of entries</summary>
 
 There is no native range-delete syntax. To delete multiple consecutive entries, use a loop — but note that line numbers shift after every deletion, so iterate from highest to lowest number to avoid chasing shifted indices:
@@ -148,7 +152,7 @@ Verify the result with `history` after the loop completes.
 {% endstep %}
 
 {% step %}
-### Clear the entire in-memory history list
+#### Clear the entire in-memory history list
 
 Remove all history entries from the current session's memory.
 
@@ -162,7 +166,7 @@ history -c
 {% endstep %}
 
 {% step %}
-### Prevent a command from being saved to history
+#### Prevent a command from being saved to history
 
 Prefix the command with one or more spaces. Bash omits space-prefixed commands from history when `HISTCONTROL` includes `ignorespace`.
 
@@ -184,7 +188,7 @@ If `echo $HISTCONTROL` does not return `ignorespace` or `ignoreboth`, the space 
 {% endstep %}
 
 {% step %}
-### Write the current session history to disk immediately
+#### Write the current session history to disk immediately
 
 Force the in-memory history to be written to `~/.bash_history` without waiting for the session to close.
 
@@ -224,30 +228,35 @@ Expected: output matches the most recently written commands.
 **Common problems and fixes**
 
 **Space-prefixed commands still appear in history**
-- Cause: `HISTCONTROL` does not include `ignorespace`
-- Fix: Run `export HISTCONTROL=ignoreboth`, or add it to `~/.bashrc`
 
----
+* Cause: `HISTCONTROL` does not include `ignorespace`
+* Fix: Run `export HISTCONTROL=ignoreboth`, or add it to `~/.bashrc`
+
+***
 
 **`history -d` removes the wrong entry**
-- Cause: Line numbers shift after each deletion
-- Fix: Run `history` again after each deletion to get current numbers before the next `history -d`
 
----
+* Cause: Line numbers shift after each deletion
+* Fix: Run `history` again after each deletion to get current numbers before the next `history -d`
+
+***
 
 **`!string` executes the wrong command**
-- Cause: Multiple commands share the same prefix; the most recent match is not the intended one
-- Fix: Use `!number` from the explicit history list instead, or use `Ctrl-R` to confirm the match visually before executing
 
----
+* Cause: Multiple commands share the same prefix; the most recent match is not the intended one
+* Fix: Use `!number` from the explicit history list instead, or use `Ctrl-R` to confirm the match visually before executing
+
+***
 
 **`~/.bash_history` does not update after `history -c`**
-- Cause: `-c` clears in-memory history only; a subsequent session write overwrites the file with the now-empty list, but only after `history -w` or session close
-- Fix: Run `history -c && history -w` together to clear both memory and file immediately
 
----
+* Cause: `-c` clears in-memory history only; a subsequent session write overwrites the file with the now-empty list, but only after `history -w` or session close
+* Fix: Run `history -c && history -w` together to clear both memory and file immediately
+
+***
 
 **`Ctrl-R` finds no match**
-- Cause: The command is not in the in-memory history list, or was deleted
-- Fix: Search `~/.bash_history` directly with `grep pattern ~/.bash_history`
+
+* Cause: The command is not in the in-memory history list, or was deleted
+* Fix: Search `~/.bash_history` directly with `grep pattern ~/.bash_history`
 {% endhint %}

@@ -1,9 +1,11 @@
 ---
-description: Read built-in environment variables, define your own shell variables, export them, and confirm that child processes inherit the values you set.
+description: >-
+  Read built-in environment variables, define your own shell variables, export
+  them, and confirm that child processes inherit the values you set.
 icon: graduation-cap
 ---
 
-# Read and Set Shell Variables
+# Tutorial 4: Read and Set Shell Variables
 
 {% hint style="info" %}
 **Before you start:** You need a shell prompt on a RHEL system logged in as a regular user (not root), and comfort issuing basic commands at the prompt (Tutorial 3 or equivalent).
@@ -20,7 +22,7 @@ Hello RHCSA
 
 {% stepper %}
 {% step %}
-### Read Three Built-in Environment Variables
+#### Read Three Built-in Environment Variables
 
 Use `echo` to read the values of three variables the shell provides automatically.
 
@@ -66,7 +68,7 @@ Every variable name must be prefixed with `$` — that is the signal to the shel
 {% endstep %}
 
 {% step %}
-### List All Environment Variables with env
+#### List All Environment Variables with env
 
 Use `env` to display every variable currently exported to the environment.
 
@@ -90,7 +92,7 @@ LANG=en_US.UTF-8
 {% endstep %}
 
 {% step %}
-### Create a Shell Variable
+#### Create a Shell Variable
 
 Define your own variable with an assignment statement.
 
@@ -120,7 +122,7 @@ Do not put spaces around the `=` sign. `MYGREETING = "Hello RHCSA"` will fail �
 {% endstep %}
 
 {% step %}
-### Confirm the Variable Is Not Yet Inherited
+#### Confirm the Variable Is Not Yet Inherited
 
 Check what a child shell sees before you export the variable.
 
@@ -132,7 +134,6 @@ bash -c 'echo $MYGREETING'
 **Output**
 
 ```
-
 ```
 
 An empty line is the correct result here. The child shell has no knowledge of `MYGREETING` because it has not been exported yet.
@@ -143,6 +144,7 @@ Use **single quotes** around `'echo $MYGREETING'`. Double quotes would cause the
 {% endhint %}
 
 <details>
+
 <summary>If you see `Hello RHCSA` instead of an empty line</summary>
 
 Your shell session may have a previous export of `MYGREETING` from an earlier run. Unset it and start this step again:
@@ -159,7 +161,7 @@ You should now see an empty line.
 {% endstep %}
 
 {% step %}
-### Export the Variable
+#### Export the Variable
 
 Mark `MYGREETING` for inclusion in the environment of every child process this shell launches.
 
@@ -171,7 +173,7 @@ No output is produced — the shell accepts the export silently. The variable is
 {% endstep %}
 
 {% step %}
-### Verify Inheritance in a Child Process
+#### Verify Inheritance in a Child Process
 
 Confirm that a child shell now inherits the exported variable.
 
@@ -191,7 +193,7 @@ The same value set in the parent shell is now visible inside the child shell —
 {% endstep %}
 
 {% step %}
-### Confirm the Complete Final State
+#### Confirm the Complete Final State
 
 Verify the complete state matches what was set out to build.
 
@@ -236,6 +238,6 @@ Both the parent shell and the child shell return the value you defined.
 
 ## Next Steps
 
-- [How-to: Persist Environment Variables Across Sessions](#) — make variables survive logout by writing them to `~/.bash_profile`
-- [Explanation: Understanding the Linux Shell and Command Syntax](#) — understand why exported variables propagate to child processes but not to parent processes
-- [Reference: Bash Command Syntax and Options](#) — see complete syntax for variable assignment, `export`, `env`, and `echo`
+* [How-to: Persist Environment Variables Across Sessions](tutorial_04.md) — make variables survive logout by writing them to `~/.bash_profile`
+* [Explanation: Understanding the Linux Shell and Command Syntax](tutorial_04.md) — understand why exported variables propagate to child processes but not to parent processes
+* [Reference: Bash Command Syntax and Options](tutorial_04.md) — see complete syntax for variable assignment, `export`, `env`, and `echo`

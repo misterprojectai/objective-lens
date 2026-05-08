@@ -10,7 +10,6 @@
 * [Tutorial 2: Issue Commands with Correct Syntax](x200_101/tutorial_02.md)
 * [Tutorial 3: Trace How the Shell Finds Commands](x200_101/tutorial_03.md)
 * [Tutorial 4: Read and Set Shell Variables](x200_101/tutorial_04.md)
-* [Tutorial 5: Control Shell Expansion and Quoting](x200_101/tutorial_05.md)
 * [Tutorial 6: Work Efficiently with Command History and Line Editing](x200_101/tutorial_06.md)
 * [How-to 1: Get Help for Any Command at the Shell Prompt](x200_101/howto_01.md)
 * [How-to 2: Diagnose and Fix a command not found Error](x200_101/howto_02.md)

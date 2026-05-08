@@ -1,17 +1,19 @@
 ---
-description: Practice constructing well-formed shell commands using command names, short options, combined options, and long options with values.
+description: >-
+  Practice constructing well-formed shell commands using command names, short
+  options, combined options, and long options with values.
 icon: graduation-cap
 ---
 
-# Issue Commands with Correct Syntax
+# Tutorial 2: Issue Commands with Correct Syntax
 
 In this tutorial, you will build the skill of constructing well-formed commands using the command-name, options, and arguments structure. Along the way, you will work with `ls`, `uname`, and `date` — three commands that together let you practice short options, combined short options, and long options with and without values.
 
 {% hint style="info" %}
 **Prerequisites**
 
-- A working shell prompt on an RHEL system (covered in Tutorial 1: Your First Commands at the Shell Prompt)
-- The ability to type commands and press Enter to run them
+* A working shell prompt on an RHEL system (covered in Tutorial 1: Your First Commands at the Shell Prompt)
+* The ability to type commands and press Enter to run them
 {% endhint %}
 
 By the end of this tutorial, you will have issued a series of correctly formed commands and observed exactly how the shell responds to each part of the command structure. The terminal will be in this state after the final step:
@@ -22,12 +24,11 @@ Sat May  7 14:32:00 UTC 2026
 
 That output is the result of `date` with a long option — proof that you can construct the full range of command syntax the shell expects.
 
----
+***
 
 {% stepper %}
-
 {% step %}
-### Run a Command with No Options or Arguments
+#### Run a Command with No Options or Arguments
 
 Run `uname` by itself to see what a bare command name produces.
 
@@ -45,7 +46,7 @@ This confirms the shell found the `uname` executable, ran it, and printed its ou
 {% endstep %}
 
 {% step %}
-### Add a Short Option
+#### Add a Short Option
 
 Add a single short option to `uname`. Short options are a single letter preceded by one hyphen.
 
@@ -63,7 +64,7 @@ The `-r` option changed what `uname` reported — the kernel release — without
 {% endstep %}
 
 {% step %}
-### Combine Short Options
+#### Combine Short Options
 
 Combine two short options into a single token. Most commands accept combined short options written together after a single hyphen.
 
@@ -85,7 +86,7 @@ Not every command supports combined short options — this behaviour depends on 
 {% endstep %}
 
 {% step %}
-### Use Multiple Short Options Written Separately
+#### Use Multiple Short Options Written Separately
 
 Issue the same combination as two distinct option tokens to confirm both forms are equivalent.
 
@@ -103,7 +104,7 @@ The output is identical to Step 3. The shell passes each hyphenated token to `un
 {% endstep %}
 
 {% step %}
-### Use a Long Option
+#### Use a Long Option
 
 Use a long option in place of its short equivalent. Long options begin with two hyphens followed by a descriptive word.
 
@@ -125,7 +126,7 @@ Long options require **two** hyphens (`--`). Using a single hyphen (`-kernel-rel
 {% endstep %}
 
 {% step %}
-### Use a Long Option That Requires a Value
+#### Use a Long Option That Requires a Value
 
 Use `date` with the `--date` option to supply a value using the `--option=value` form.
 
@@ -146,6 +147,7 @@ The value `"next Monday"` must be enclosed in quotes because it contains a space
 {% endhint %}
 
 <details>
+
 <summary>If you see "invalid date" instead of a date, do this</summary>
 
 Your shell may have interpreted the string differently. Try single quotes instead:
@@ -160,7 +162,7 @@ Single quotes prevent the shell from performing any expansion on the enclosed st
 {% endstep %}
 
 {% step %}
-### Use a Command with Both an Option and an Argument
+#### Use a Command with Both an Option and an Argument
 
 Issue a command that takes both an option and an argument. An argument names the target the command acts on — separate from the options that modify its behaviour.
 
@@ -181,7 +183,7 @@ drwxr-xr-x.  4 root root     78 Apr 22 10:02 audit
 {% endstep %}
 
 {% step %}
-### Verify the Full Syntax Pattern with `date`
+#### Verify the Full Syntax Pattern with `date`
 
 Verify the complete command-structure pattern by running `date` with a long option, producing a known, predictable output.
 
@@ -197,10 +199,9 @@ Sat May  7 14:32:00 UTC 2026
 
 A long option, no argument — the command is complete and well-formed. This matches the final state shown at the top of this tutorial.
 {% endstep %}
-
 {% endstepper %}
 
----
+***
 
 {% hint style="success" %}
 **You've completed this tutorial.** You have now:
@@ -215,12 +216,12 @@ A long option, no argument — the command is complete and well-formed. This mat
 8. Verified the complete syntax pattern with a final `date` command
 {% endhint %}
 
----
+***
 
 ## Next Steps
 
 Now that you have built the skill of constructing well-formed commands, continue with:
 
-- [How-to: Get Help for Any Command](#) — use `--help` and `man` to discover options for unfamiliar commands
-- [Explanation: Understanding the Linux Shell and Command Syntax](#) — understand why the shell parses commands the way it does
-- [Reference: Bash Command Syntax and Options](#) — see the complete specification of command structure and option conventions
+* [How-to: Get Help for Any Command](tutorial_02.md) — use `--help` and `man` to discover options for unfamiliar commands
+* [Explanation: Understanding the Linux Shell and Command Syntax](tutorial_02.md) — understand why the shell parses commands the way it does
+* [Reference: Bash Command Syntax and Options](tutorial_02.md) — see the complete specification of command structure and option conventions

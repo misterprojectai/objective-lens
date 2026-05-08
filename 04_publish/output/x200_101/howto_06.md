@@ -1,20 +1,23 @@
 ---
-description: Construct shell commands that correctly handle filenames and arguments containing spaces, glob characters, dollar signs, and newlines using single quotes, double quotes, backslash escaping, and ANSI-C quoting.
+description: >-
+  Construct shell commands that correctly handle filenames and arguments
+  containing spaces, glob characters, dollar signs, and newlines using single
+  quotes, double quotes, backslash escaping, and ANSI-C
 icon: wrench
 ---
 
-# How to Use Quoting and Escaping to Handle Filenames and Arguments with Special Characters
+# How-to 6: Use Quoting and Escaping to Handle Special Characters
 
 {% hint style="info" %}
 **Prerequisites**
 
-- A Bash shell prompt on an RHEL system with write access to a working directory
-- Familiarity with shell expansion behaviour — specifically that the shell processes quoting before passing arguments to commands
+* A Bash shell prompt on an RHEL system with write access to a working directory
+* Familiarity with shell expansion behaviour — specifically that the shell processes quoting before passing arguments to commands
 {% endhint %}
 
 {% stepper %}
 {% step %}
-### Create Test Files with Problematic Names
+#### Create Test Files with Problematic Names
 
 Create files whose names contain spaces and glob characters to use throughout this guide.
 
@@ -44,7 +47,7 @@ Running `touch report 2024.txt` without quotes creates **two** files named `repo
 {% endstep %}
 
 {% step %}
-### Reference Files with Spaces Using Quotes or Backslash Escaping
+#### Reference Files with Spaces Using Quotes or Backslash Escaping
 
 To pass a filename containing spaces as a single argument, use one of three equivalent forms.
 
@@ -54,11 +57,13 @@ To pass a filename containing spaces as a single argument, use one of three equi
 ls -l 'report 2024.txt'
 ```
 {% endtab %}
+
 {% tab title="Double quotes" %}
 ```bash
 ls -l "report 2024.txt"
 ```
 {% endtab %}
+
 {% tab title="Backslash escaping" %}
 ```bash
 ls -l report\ 2024.txt
@@ -70,7 +75,7 @@ All three produce the same result. Choose single quotes when the filename contai
 {% endstep %}
 
 {% step %}
-### Prevent Glob Expansion on Bracket Characters
+#### Prevent Glob Expansion on Bracket Characters
 
 The filename `costs [final].csv` contains `[` and `]`, which the shell treats as glob metacharacters. Without quoting, the shell attempts to match `[final]` as a character class and may fail or produce unexpected results:
 
@@ -96,7 +101,7 @@ ls -l costs\ \[final\].csv
 {% endstep %}
 
 {% step %}
-### Prevent Dollar Sign Expansion with Single Quotes
+#### Prevent Dollar Sign Expansion with Single Quotes
 
 The filename `price$list.txt` contains `$`, which the shell treats as the start of a variable reference.
 
@@ -120,7 +125,7 @@ Double quotes never suppress `$` expansion. If a filename or argument must reach
 {% endstep %}
 
 {% step %}
-### Expand Variables Inside Filenames Using Double Quotes
+#### Expand Variables Inside Filenames Using Double Quotes
 
 When the argument contains both a variable reference you want expanded and characters that would otherwise be split or globbed, use double quotes.
 
@@ -137,7 +142,7 @@ Use `${VAR}` brace syntax inside double-quoted strings when the variable name is
 {% endstep %}
 
 {% step %}
-### Embed Literal Newlines and Escape Sequences Using ANSI-C Quoting
+#### Embed Literal Newlines and Escape Sequences Using ANSI-C Quoting
 
 To pass arguments containing newlines, tabs, or other control characters, use ANSI-C quoting: `$'...'`.
 
@@ -167,7 +172,7 @@ ANSI-C quoting recognises `\n` (newline), `\t` (tab), `\\` (literal backslash), 
 {% endstep %}
 
 {% step %}
-### Verify Expansion Before Execution Using echo and printf %q
+#### Verify Expansion Before Execution Using echo and printf %q
 
 Before running a destructive or complex command, verify that the shell is constructing arguments exactly as intended.
 
@@ -202,7 +207,7 @@ The output `price.txt` — not `price\$list.txt` — confirms that `"price$list.
 {% endstep %}
 
 {% step %}
-### Escape a Single Quote Inside a Single-Quoted String
+#### Escape a Single Quote Inside a Single-Quoted String
 
 Single quotes suppress everything, including escape sequences — there is no way to embed a literal single quote inside a single-quoted string by escaping it. Use one of two alternatives.
 
@@ -229,6 +234,7 @@ it's a test
 {% endhint %}
 
 <details>
+
 <summary>Why the close-reopen trick works</summary>
 
 The shell concatenates adjacent quoted strings with no separator. `'it'` is a single-quoted string containing `it`, `\'` is a backslash-escaped single quote producing a literal `'`, and `'s a test'` is a single-quoted string containing `s a test`. The shell joins them into a single argument: `it's a test`.
@@ -266,37 +272,25 @@ Any `No such file or directory` error indicates a quoting failure on that specif
 {% hint style="warning" %}
 **Common quoting failures and their fixes**
 
-**`ls: cannot access 'price.txt': No such file or directory`**
-→ `$list` was expanded inside double quotes, stripping it to empty
-→ Use single quotes: `'price$list.txt'`
+**`ls: cannot access 'price.txt': No such file or directory`** → `$list` was expanded inside double quotes, stripping it to empty → Use single quotes: `'price$list.txt'`
 
----
+***
 
-**`touch report 2024.txt` creates two files instead of one**
-→ The space is unquoted and treated as an argument separator
-→ Quote the argument: `touch 'report 2024.txt'`
+**`touch report 2024.txt` creates two files instead of one** → The space is unquoted and treated as an argument separator → Quote the argument: `touch 'report 2024.txt'`
 
----
+***
 
-**`ls -l costs [final].csv` returns unexpected files or an error**
-→ `[final]` is interpreted as a glob character class
-→ Quote the brackets: `'costs [final].csv'` or escape each: `costs\ \[final\].csv`
+**`ls -l costs [final].csv` returns unexpected files or an error** → `[final]` is interpreted as a glob character class → Quote the brackets: `'costs [final].csv'` or escape each: `costs\ \[final\].csv`
 
----
+***
 
-**ANSI-C quoting `$'...'` produces literal text instead of the escape sequence**
-→ The shell is not Bash — ANSI-C quoting is a Bash extension, not POSIX `sh`
-→ Confirm `echo $SHELL` returns `/bin/bash`; switch to a Bash shell
+**ANSI-C quoting `$'...'` produces literal text instead of the escape sequence** → The shell is not Bash — ANSI-C quoting is a Bash extension, not POSIX `sh` → Confirm `echo $SHELL` returns `/bin/bash`; switch to a Bash shell
 
----
+***
 
-**`echo $'it\'s'` fails with a syntax error**
-→ `$'...'` is being used inside another quoting context
-→ Use `$'...'` standalone, not nested inside other quote characters
+**`echo $'it\'s'` fails with a syntax error** → `$'...'` is being used inside another quoting context → Use `$'...'` standalone, not nested inside other quote characters
 
----
+***
 
-**Variable inside single quotes not expanded**
-→ Single quotes suppress all expansion by design
-→ Switch to double quotes and verify the variable reference with `echo` first
+**Variable inside single quotes not expanded** → Single quotes suppress all expansion by design → Switch to double quotes and verify the variable reference with `echo` first
 {% endhint %}

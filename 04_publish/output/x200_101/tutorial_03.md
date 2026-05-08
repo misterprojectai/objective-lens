@@ -1,24 +1,26 @@
 ---
-description: Trace exactly how Bash resolves a command name by reading $PATH, classifying builtins, aliases, and external executables with type and which.
+description: >-
+  Trace exactly how Bash resolves a command name by reading $PATH, classifying
+  builtins, aliases, and external executables with type and which.
 icon: graduation-cap
 ---
 
-# Trace How the Shell Finds Commands
+# Tutorial 3: Trace How the Shell Finds Commands
 
 In this tutorial, we will trace exactly how Bash resolves a command name into something it can execute. Along the way, we will read and interpret `$PATH`, use `type` and `which` to locate commands, and distinguish shell builtins from external executables.
 
 {% hint style="info" %}
 **Prerequisites**
 
-- A working Bash shell prompt on an RHEL system (covered in Tutorial 1)
-- Ability to type commands and read their output (covered in Tutorial 2)
+* A working Bash shell prompt on an RHEL system (covered in Tutorial 1)
+* Ability to type commands and read their output (covered in Tutorial 2)
 {% endhint %}
 
 By the end of this tutorial, we will have traced the full resolution path for four commands — one builtin, one external, one alias, and one that does not exist.
 
 {% stepper %}
 {% step %}
-### Display the Current $PATH
+#### Display the Current $PATH
 
 Display the `$PATH` variable to see where the shell looks for commands.
 
@@ -36,7 +38,7 @@ Each directory is separated by a colon. When you type a command name, the shell 
 {% endstep %}
 
 {% step %}
-### Read $PATH as a List
+#### Read $PATH as a List
 
 Make the raw value readable by replacing each colon with a newline.
 
@@ -59,7 +61,7 @@ Notice that `/usr/bin` appears early in the list — this is where most standard
 {% endstep %}
 
 {% step %}
-### Identify a Shell Builtin
+#### Identify a Shell Builtin
 
 Check whether `cd` is found in `$PATH`.
 
@@ -77,7 +79,7 @@ The shell did not search `$PATH` at all — `cd` is implemented inside Bash itse
 {% endstep %}
 
 {% step %}
-### Identify an External Executable
+#### Identify an External Executable
 
 Check a command that does live on the filesystem.
 
@@ -95,7 +97,7 @@ The shell reports the full path to the executable. This tells us exactly which f
 {% endstep %}
 
 {% step %}
-### Identify an Alias
+#### Identify an Alias
 
 Check `ls`, which behaves differently from a plain executable on RHEL.
 
@@ -113,7 +115,7 @@ The shell resolved `ls` to an alias before checking `$PATH`. When we type `ls`, 
 {% endstep %}
 
 {% step %}
-### Confirm a Command's Location with which
+#### Confirm a Command's Location with which
 
 Use `which` to confirm the filesystem location of `cat` independently from `type`.
 
@@ -133,7 +135,7 @@ which cat
 {% endstep %}
 
 {% step %}
-### Observe a Command That Cannot Be Found
+#### Observe a Command That Cannot Be Found
 
 Ask the shell to resolve a name that does not exist anywhere in its resolution sequence.
 
@@ -151,7 +153,7 @@ The shell reports `not found` rather than a file path. The shell checked builtin
 {% endstep %}
 
 {% step %}
-### Verify the Complete State
+#### Verify the Complete State
 
 Run all checks together to confirm the final state matches what we set out to achieve.
 
@@ -180,37 +182,12 @@ bash: type: foobar: not found
 {% hint style="success" %}
 **What you accomplished**
 
-- Displayed and read `$PATH` to see the ordered list of directories the shell searches
-- Used `type` to classify `cd` as a shell builtin, `ls` as an alias, and `cat` as an external executable
-- Used `which` to confirm the filesystem location of an external command
-- Observed the shell's `not found` response when no match exists at any stage of resolution
+* Displayed and read `$PATH` to see the ordered list of directories the shell searches
+* Used `type` to classify `cd` as a shell builtin, `ls` as an alias, and `cat` as an external executable
+* Used `which` to confirm the filesystem location of an external command
+* Observed the shell's `not found` response when no match exists at any stage of resolution
 {% endhint %}
 
 ## Next Steps
 
-<table data-view="cards">
-  <thead>
-    <tr>
-      <th></th>
-      <th></th>
-      <th data-hidden data-card-target data-type="content-ref"></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><strong>How-to: Modify $PATH</strong></td>
-      <td>Add a custom command directory to make your own tools available as simple commands.</td>
-      <td><a href="#">#</a></td>
-    </tr>
-    <tr>
-      <td><strong>Explanation: Shell and Command Syntax</strong></td>
-      <td>Understand why builtins must live inside the shell and cannot be external programs.</td>
-      <td><a href="#">#</a></td>
-    </tr>
-    <tr>
-      <td><strong>Reference: Bash Command Syntax and Options</strong></td>
-      <td>See the complete resolution order and all <code>type</code> output formats.</td>
-      <td><a href="#">#</a></td>
-    </tr>
-  </tbody>
-</table>
+<table data-view="cards"><thead><tr><th></th><th></th><th data-hidden data-card-target data-type="content-ref"></th></tr></thead><tbody><tr><td><strong>How-to: Modify $PATH</strong></td><td>Add a custom command directory to make your own tools available as simple commands.</td><td><a href="tutorial_03.md">tutorial_03.md</a></td></tr><tr><td><strong>Explanation: Shell and Command Syntax</strong></td><td>Understand why builtins must live inside the shell and cannot be external programs.</td><td><a href="tutorial_03.md">tutorial_03.md</a></td></tr><tr><td><strong>Reference: Bash Command Syntax and Options</strong></td><td>See the complete resolution order and all <code>type</code> output formats.</td><td><a href="tutorial_03.md">tutorial_03.md</a></td></tr></tbody></table>

@@ -1,19 +1,23 @@
 ---
-description: Inspect and document the active shell, user identity, environment variables, and $PATH state before executing privileged or deployment commands, and detect unexpected variable overrides.
+description: >-
+  Inspect and document the active shell, user identity, environment variables,
+  and $PATH state before executing privileged or deployment commands, and detect
+  unexpected variable overrides.
 icon: wrench
 ---
 
-# How to Audit the Shell Environment Before Running Administrative Tasks
+# How-to 5: Audit the Shell Environment Before Running Administrative Tasks
 
 {% hint style="info" %}
 **Prerequisites:**
-- A Bash shell prompt on an RHEL system — either a regular user session or an escalated session via `sudo -i` or `su -`
-- Read access to `/etc/environment`, `/etc/profile.d/`, and `~/.bashrc` if you need to trace variable origins
+
+* A Bash shell prompt on an RHEL system — either a regular user session or an escalated session via `sudo -i` or `su -`
+* Read access to `/etc/environment`, `/etc/profile.d/`, and `~/.bashrc` if you need to trace variable origins
 {% endhint %}
 
 {% stepper %}
 {% step %}
-### Confirm the active shell and shell version
+#### Confirm the active shell and shell version
 
 Verify which shell binary is running and its version before trusting any shell-specific behaviour.
 
@@ -34,7 +38,7 @@ ps -p $$
 {% endstep %}
 
 {% step %}
-### Confirm the effective user identity
+#### Confirm the effective user identity
 
 Verify who the shell believes you are — both the login identity and the effective user.
 
@@ -57,7 +61,7 @@ echo $HOME
 {% endstep %}
 
 {% step %}
-### Capture all exported environment variables
+#### Capture all exported environment variables
 
 Dump the full exported environment to a baseline snapshot before making changes.
 
@@ -77,7 +81,7 @@ env | sort > /tmp/env-before.txt
 {% endstep %}
 
 {% step %}
-### Capture all shell variables, including unexported ones
+#### Capture all shell variables, including unexported ones
 
 `env` shows only exported variables. Use `set` to include shell-local variables and functions that may shadow or interfere with commands.
 
@@ -97,7 +101,7 @@ set | sort > /tmp/set-before.txt
 {% endstep %}
 
 {% step %}
-### Inspect and validate $PATH
+#### Inspect and validate $PATH
 
 Display the current `$PATH` as a readable list to check for unexpected directories.
 
@@ -116,6 +120,7 @@ If the grep command above returns **any output**, a user-owned directory is pres
 {% endhint %}
 
 <details>
+
 <summary>Why a user-owned directory appears in a root $PATH</summary>
 
 This typically occurs when `sudo -i` is called without `env_reset` enforced in `/etc/sudoers`, or when `sudo su` is used instead of `sudo -i`. The `sudo su` invocation spawns a root shell that inherits the invoking user's exported environment, including `$PATH`. Using `sudo -i` directly and verifying `/etc/sudoers` contains `Defaults env_reset` prevents this.
@@ -124,7 +129,7 @@ This typically occurs when `sudo -i` is called without `env_reset` enforced in `
 {% endstep %}
 
 {% step %}
-### Detect variable overrides that shadow standard commands
+#### Detect variable overrides that shadow standard commands
 
 Check whether any environment variables or shell definitions are overriding commands or altering critical behaviour.
 
@@ -163,7 +168,7 @@ Any output from `declare -f <command>` means a shell function is intercepting th
 {% endstep %}
 
 {% step %}
-### Trace the origin of a suspicious variable
+#### Trace the origin of a suspicious variable
 
 If a variable holds an unexpected value, identify which startup file set it.
 
@@ -178,9 +183,11 @@ Search for the variable name without the `$` prefix — you are looking for the 
 {% endhint %}
 
 <details>
+
 <summary>Startup file load order for reference</summary>
 
 For a login shell (`sudo -i`, `su -`), Bash reads files in this order:
+
 1. `/etc/profile`
 2. `/etc/profile.d/*.sh` (sourced by `/etc/profile`)
 3. `~/.bash_profile` (or `~/.bash_login`, then `~/.profile` if not found)
@@ -191,7 +198,7 @@ For a non-login interactive shell, Bash reads only `~/.bashrc`. An unexpected va
 {% endstep %}
 
 {% step %}
-### Compare the environment after escalation
+#### Compare the environment after escalation
 
 After running `sudo -i` or `su -`, compare the current environment against the pre-escalation snapshot captured in Step 3.
 
@@ -218,49 +225,57 @@ id && echo $SHELL && echo $PATH | tr ':' '\n' | head -6 && alias | grep -E 'sudo
 ```
 
 **Expected result:**
-- Effective UID matches the intended account
-- Shell is `/bin/bash`
-- `$PATH` shows only system directories for root sessions (no `/home/...` or `.local` paths)
-- No critical command aliases are present (output ends with `no critical aliases found`)
+
+* Effective UID matches the intended account
+* Shell is `/bin/bash`
+* `$PATH` shows only system directories for root sessions (no `/home/...` or `.local` paths)
+* No critical command aliases are present (output ends with `no critical aliases found`)
 {% endhint %}
 
 ## Troubleshooting
 
 {% hint style="warning" %}
 **`type sudo` returns `sudo is aliased to ...`**
-- **Cause:** An alias was defined in `~/.bashrc` or a profile script
-- **Fix:** Run `unalias sudo` in the current session; locate and remove the definition from its source file
 
----
+* **Cause:** An alias was defined in `~/.bashrc` or a profile script
+* **Fix:** Run `unalias sudo` in the current session; locate and remove the definition from its source file
+
+***
 
 **`$PATH` contains `/home/user/.local/bin` in a root shell**
-- **Cause:** `sudo -i` inherited the invoking user's environment due to missing `env_reset`
-- **Fix:** Verify `/etc/sudoers` contains `Defaults env_reset`; use `sudo -i` (not `sudo su`); re-audit after a clean `sudo -i` session
 
----
+* **Cause:** `sudo -i` inherited the invoking user's environment due to missing `env_reset`
+* **Fix:** Verify `/etc/sudoers` contains `Defaults env_reset`; use `sudo -i` (not `sudo su`); re-audit after a clean `sudo -i` session
+
+***
 
 **`declare -f useradd` produces output**
-- **Cause:** A shell function shadows the real `useradd` binary
-- **Fix:** Unset the function with `unset -f useradd`; trace its origin with `grep -r useradd /etc/profile.d/ ~/.bashrc`
 
----
+* **Cause:** A shell function shadows the real `useradd` binary
+* **Fix:** Unset the function with `unset -f useradd`; trace its origin with `grep -r useradd /etc/profile.d/ ~/.bashrc`
+
+***
 
 **`diff` shows a critical variable was dropped after `su -`**
-- **Cause:** `su -` resets the environment to the target user's defaults — this is expected behaviour
-- **Fix:** Re-export required variables explicitly after escalation, only after confirming they are safe to carry into the privileged session
 
----
+* **Cause:** `su -` resets the environment to the target user's defaults — this is expected behaviour
+* **Fix:** Re-export required variables explicitly after escalation, only after confirming they are safe to carry into the privileged session
+
+***
 
 **`/usr/bin` missing from `$PATH`**
-- **Cause:** `$PATH` was overwritten without including standard directories
-- **Fix:** Restore with:
-  ```bash
-  export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-  ```
 
----
+* **Cause:** `$PATH` was overwritten without including standard directories
+*   **Fix:** Restore with:
+
+    ```bash
+    export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+    ```
+
+***
 
 **`echo $USER` shows wrong identity after `sudo -i`**
-- **Cause:** `sudo` preserved the invoking user's `$USER` variable via an `env_keep` entry in `/etc/sudoers`
-- **Fix:** Use `id` rather than `$USER` to determine effective identity; audit `/etc/sudoers` for `env_keep` entries and remove `USER` if present
+
+* **Cause:** `sudo` preserved the invoking user's `$USER` variable via an `env_keep` entry in `/etc/sudoers`
+* **Fix:** Use `id` rather than `$USER` to determine effective identity; audit `/etc/sudoers` for `env_keep` entries and remove `USER` if present
 {% endhint %}

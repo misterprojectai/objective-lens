@@ -1,14 +1,17 @@
 ---
-description: Recall, edit, and reissue Bash commands without retyping them using history expansion, reverse search, and readline keyboard shortcuts.
+description: >-
+  Recall, edit, and reissue Bash commands without retyping them using history
+  expansion, reverse search, and readline keyboard shortcuts.
 icon: graduation-cap
 ---
 
-# Work Efficiently with Command History and Line Editing
+# Tutorial 6: Work Efficiently with Command History and Line Editing
 
 {% hint style="info" %}
 **Before you start, you need:**
-- A Bash shell prompt on an RHEL system (the `$` prompt is visible)
-- At least a few minutes of prior command entry so the history list is populated
+
+* A Bash shell prompt on an RHEL system (the `$` prompt is visible)
+* At least a few minutes of prior command entry so the history list is populated
 {% endhint %}
 
 By the end of this tutorial, you will have recalled commands by number, by string prefix, and through reverse search; edited a command on the line before running it; and cleared and navigated the line using keyboard shortcuts. The session will demonstrate this final state:
@@ -25,11 +28,11 @@ $
 
 Every technique we practise leaves a trace in that history list — a concrete record that the session's efficiency tools are working.
 
----
+***
 
 {% stepper %}
 {% step %}
-### Display the History List
+#### Display the History List
 
 View the current history list to get the reference numbers you will use in later steps.
 
@@ -52,7 +55,7 @@ Notice that each line carries a number. Those numbers are what you will use in t
 {% endstep %}
 
 {% step %}
-### Recall the Most Recent Command with `!!`
+#### Recall the Most Recent Command with `!!`
 
 Use `!!` to repeat the last command you ran — in this case, `history` itself.
 
@@ -78,7 +81,7 @@ Bash prints the expanded command (`history`) on its own line before running it. 
 {% endstep %}
 
 {% step %}
-### Recall a Command by History Number with `!n`
+#### Recall a Command by History Number with `!n`
 
 Recall a specific command by its number. You will rerun the `uname -r` entry.
 
@@ -101,7 +104,7 @@ Bash echoes the expanded command before its output. The kernel version string th
 {% endstep %}
 
 {% step %}
-### Recall a Command by String Prefix with `!string`
+#### Recall a Command by String Prefix with `!string`
 
 Re-execute the most recent command that starts with a particular string — here, the most recent `ls` command.
 
@@ -126,7 +129,7 @@ dr-xr-xr-x.  17 root root   224 Apr 15 08:02 ..
 {% endstep %}
 
 {% step %}
-### Search History Interactively with Ctrl-R
+#### Search History Interactively with Ctrl-R
 
 Find a command by typing part of it — without knowing its history number.
 
@@ -157,7 +160,7 @@ You found and ran the command without typing its full text or knowing its histor
 {% endstep %}
 
 {% step %}
-### Move the Cursor to the Start and End of a Line
+#### Move the Cursor to the Start and End of a Line
 
 Practise cursor navigation on a long command before running it. Type the following but **do not press Enter yet**:
 
@@ -197,7 +200,7 @@ drwxr-xr-x. 7 root root 134 Apr 15 08:02 ..
 {% endstep %}
 
 {% step %}
-### Delete from the Cursor to the Beginning of the Line with Ctrl-U
+#### Delete from the Cursor to the Beginning of the Line with Ctrl-U
 
 Practise clearing an in-progress command. Type the following but **do not press Enter**:
 
@@ -221,7 +224,7 @@ Ctrl-U discards everything from the cursor position back to the start of the lin
 {% endstep %}
 
 {% step %}
-### Delete the Previous Word with Ctrl-W
+#### Delete the Previous Word with Ctrl-W
 
 Practise removing one argument at a time. Type the following but **do not press Enter**:
 
@@ -232,7 +235,7 @@ ls -la /etc/hostname
 Press **Ctrl-W**.
 
 {% hint style="success" %}
-The argument `/etc/hostname` is gone, but `ls -la ` remains:
+The argument `/etc/hostname` is gone, but `ls -la` remains:
 
 ```
 $ ls -la
@@ -255,7 +258,7 @@ Press **Ctrl-U** to clear the line before the next step.
 {% endstep %}
 
 {% step %}
-### Clear the Screen with Ctrl-L
+#### Clear the Screen with Ctrl-L
 
 Clear a cluttered terminal without losing your command history. First, fill the screen:
 
@@ -297,7 +300,7 @@ This matches the final state shown at the top of this tutorial.
 {% endstep %}
 {% endstepper %}
 
----
+***
 
 {% hint style="success" %}
 **You've completed the tutorial.** In this session you:
@@ -313,12 +316,12 @@ This matches the final state shown at the top of this tutorial.
 9. Cleared the terminal display using Ctrl-L while preserving history
 {% endhint %}
 
----
+***
 
 ## Next Steps
 
 Now that you have built efficient command-line habits, continue with:
 
-- [How-to: Use Command History and Keyboard Shortcuts](#) — apply these techniques in real administrative scenarios
-- [Explanation: Understanding the Linux Shell and Command Syntax](#) — understand why history and readline exist as part of the shell's interactive design
-- [Reference: Bash Command Syntax and Options](#) — see the complete specification of history expansion operators and readline bindings
+* [How-to: Use Command History and Keyboard Shortcuts](tutorial_06.md) — apply these techniques in real administrative scenarios
+* [Explanation: Understanding the Linux Shell and Command Syntax](tutorial_06.md) — understand why history and readline exist as part of the shell's interactive design
+* [Reference: Bash Command Syntax and Options](tutorial_06.md) — see the complete specification of history expansion operators and readline bindings

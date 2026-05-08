@@ -1,17 +1,19 @@
 ---
-description: Open an interactive Bash shell on RHEL three ways — GNOME terminal, virtual console, and SSH — and confirm your shell identity at each checkpoint.
+description: >-
+  Open an interactive Bash shell on RHEL three ways — GNOME terminal, virtual
+  console, and SSH — and confirm your shell identity at each checkpoint.
 icon: graduation-cap
 ---
 
-# Open Your First Shell Session on RHEL
+# Tutorial 1: Open Your First Shell Session on RHEL
 
 In this tutorial, you will open an interactive Bash shell three different ways: through a GNOME terminal, through a virtual console, and through an SSH connection. Along the way, you will read the prompt to confirm who you are, where you are, and which shell is running.
 
 {% hint style="info" %}
 **Before you begin, you need:**
 
-- A running RHEL 9 system with an active GNOME desktop session and a user account with a known password
-- The IP address of your RHEL system and network access to it (required for the SSH step)
+* A running RHEL 9 system with an active GNOME desktop session and a user account with a known password
+* The IP address of your RHEL system and network access to it (required for the SSH step)
 {% endhint %}
 
 By the end of this tutorial, you will have confirmed Bash as your active shell in all three session types. The final verification produces this single line:
@@ -22,7 +24,7 @@ By the end of this tutorial, you will have confirmed Bash as your active shell i
 
 {% stepper %}
 {% step %}
-### Open a Terminal from the GNOME Desktop
+#### Open a Terminal from the GNOME Desktop
 
 Right-click on the empty desktop and select **Open Terminal**, or press the **Super** key, type `terminal`, and press **Enter** to launch GNOME Terminal.
 
@@ -36,7 +38,7 @@ Your own username and hostname will appear in place of `student` and `rhel9`, bu
 {% endstep %}
 
 {% step %}
-### Read the Prompt Components
+#### Read the Prompt Components
 
 Print your current username to confirm the first component of the prompt:
 
@@ -66,7 +68,7 @@ The `~` character in your prompt is shorthand for `/home/student`. The prompt re
 {% endstep %}
 
 {% step %}
-### Confirm Which Shell Is Active
+#### Confirm Which Shell Is Active
 
 Print the shell assigned to your user account:
 
@@ -86,7 +88,7 @@ This confirms that Bash is the default shell for your account. Keep this termina
 {% endstep %}
 
 {% step %}
-### Switch to a Virtual Console
+#### Switch to a Virtual Console
 
 Press **Ctrl-Alt-F2** on your keyboard. The screen will switch away from the graphical desktop and display a full-screen login prompt:
 
@@ -111,7 +113,7 @@ If the screen goes blank instead of showing the login prompt, your system may be
 {% endstep %}
 
 {% step %}
-### Confirm the Virtual Console Identity
+#### Confirm the Virtual Console Identity
 
 Print the terminal device this session is using:
 
@@ -141,7 +143,7 @@ Press **Ctrl-Alt-F1** to return to the GNOME desktop and the terminal window you
 {% endstep %}
 
 {% step %}
-### Open a Shell Session Over SSH
+#### Open a Shell Session Over SSH
 
 In the GNOME terminal from Step 1, connect to your RHEL system over SSH. Replace `192.168.1.100` with the actual IP address of your system:
 
@@ -170,6 +172,7 @@ You must type `yes` in full — `y` alone will not be accepted and the connectio
 {% endhint %}
 
 <details>
+
 <summary>If you see "Connection refused" instead of the fingerprint prompt</summary>
 
 The SSH daemon may not be running on your RHEL system. On the system console or GNOME terminal, run:
@@ -184,7 +187,7 @@ Then retry the `ssh` command.
 {% endstep %}
 
 {% step %}
-### Confirm the SSH Session Identity
+#### Confirm the SSH Session Identity
 
 Print the terminal device this SSH connection is using:
 
@@ -215,7 +218,7 @@ You are back at the GNOME terminal prompt.
 {% endstep %}
 
 {% step %}
-### Verify the Final System State
+#### Verify the Final System State
 
 Run the shell confirmation one last time in the GNOME terminal, completing the contract set out at the beginning of this tutorial:
 
@@ -231,7 +234,7 @@ echo $SHELL
 {% endstep %}
 {% endstepper %}
 
----
+***
 
 {% hint style="success" %}
 **You've completed the tutorial.** You have:
@@ -245,10 +248,10 @@ echo $SHELL
 7. Closed both the virtual console and SSH sessions cleanly using `exit`
 {% endhint %}
 
----
+***
 
 ## Next Steps
 
-- [How-to: Access a Shell Prompt on RHEL](#) — procedures for opening terminal sessions quickly in different scenarios
-- [Explanation: Understanding the Linux Shell and Command Syntax](#) — understand why the prompt looks the way it does, what `$SHELL` means, and how Bash fits into the Linux architecture
-- [Reference: Bash Command Syntax and Options](#) — complete specification of command structure and shell variables
+* [How-to: Access a Shell Prompt on RHEL](tutorial_01.md) — procedures for opening terminal sessions quickly in different scenarios
+* [Explanation: Understanding the Linux Shell and Command Syntax](tutorial_01.md) — understand why the prompt looks the way it does, what `$SHELL` means, and how Bash fits into the Linux architecture
+* [Reference: Bash Command Syntax and Options](tutorial_01.md) — complete specification of command structure and shell variables

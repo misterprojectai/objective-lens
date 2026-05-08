@@ -1,20 +1,22 @@
 ---
-description: Locate usage information and option syntax for any command using the built-in help tools available at every RHEL shell prompt.
+description: >-
+  Locate usage information and option syntax for any command using the built-in
+  help tools available at every RHEL shell prompt.
 icon: wrench
 ---
 
-# How to Get Help for Any Command at the Shell Prompt
+# How-to 1: Get Help for Any Command at the Shell Prompt
 
 {% hint style="info" %}
 **Prerequisites**
 
-- An active Bash shell prompt on an RHEL system
-- The name of the command you want to investigate, or a topic keyword to search
+* An active Bash shell prompt on an RHEL system
+* The name of the command you want to investigate, or a topic keyword to search
 {% endhint %}
 
 {% stepper %}
 {% step %}
-### Display a Command's Built-in Usage Summary
+#### Display a Command's Built-in Usage Summary
 
 Run the command with `--help` to display a compact usage summary and available options.
 
@@ -28,7 +30,7 @@ A small number of commands use `-h` instead of `--help`. If `--help` produces an
 {% endstep %}
 
 {% step %}
-### Open the Full Manual Page for a Command
+#### Open the Full Manual Page for a Command
 
 Open the `man` page for complete documentation, including all options, argument syntax, and examples.
 
@@ -38,24 +40,24 @@ man ls
 
 Navigate the manual page with these keys:
 
-| Key | Action |
-|---|---|
-| `Space` or `f` | Scroll forward one page |
-| `b` | Scroll back one page |
-| `/pattern` | Search forward for text |
-| `n` | Jump to next search match |
-| `q` | Quit and return to the shell |
+| Key            | Action                       |
+| -------------- | ---------------------------- |
+| `Space` or `f` | Scroll forward one page      |
+| `b`            | Scroll back one page         |
+| `/pattern`     | Search forward for text      |
+| `n`            | Jump to next search match    |
+| `q`            | Quit and return to the shell |
 {% endstep %}
 
 {% step %}
-### Read the Synopsis Section of a Man Page
+#### Read the Synopsis Section of a Man Page
 
 Locate the **SYNOPSIS** section immediately below the **NAME** section. Interpret it using these conventions:
 
-- **Bold** text — type exactly as shown
-- *Underlined* or *italic* text — replace with your own value
-- `[item]` — optional; omit if not needed
-- `item...` — repeatable; provide one or more
+* **Bold** text — type exactly as shown
+* _Underlined_ or _italic_ text — replace with your own value
+* `[item]` — optional; omit if not needed
+* `item...` — repeatable; provide one or more
 
 For example, the synopsis for `ls`:
 
@@ -67,7 +69,7 @@ This means `ls` accepts zero or more options and zero or more file arguments, al
 {% endstep %}
 
 {% step %}
-### Get a One-Line Description of a Command with whatis
+#### Get a One-Line Description of a Command with whatis
 
 Look up a brief description of any command without opening a full man page.
 
@@ -89,7 +91,7 @@ If `whatis` returns `nothing appropriate`, the man page database may be out of d
 {% endstep %}
 
 {% step %}
-### Determine the Type and Location of a Command
+#### Determine the Type and Location of a Command
 
 Confirm how the shell resolves a command — builtin, alias, or external executable — before reading its help.
 
@@ -99,8 +101,8 @@ type cd
 type cat
 ```
 
-- If `cd` reports as a shell builtin, use `help cd` for its documentation instead of `man cd`.
-- If `ls` is aliased, `type` shows the alias expansion before you read its options.
+* If `cd` reports as a shell builtin, use `help cd` for its documentation instead of `man cd`.
+* If `ls` is aliased, `type` shows the alias expansion before you read its options.
 
 For an external command, confirm the full path on disk:
 
@@ -114,7 +116,7 @@ Shell builtins such as `cd`, `echo`, and `pwd` have no standalone man page in so
 {% endstep %}
 
 {% step %}
-### Search Man Pages by Topic with apropos
+#### Search Man Pages by Topic with apropos
 
 When you know what you want to do but not which command to use, search all man page descriptions by keyword.
 
@@ -129,6 +131,7 @@ sudo mandb
 ```
 
 <details>
+
 <summary>Broadening an apropos search that returns no results</summary>
 
 If rebuilding the database still returns nothing, the keyword may be too specific. Try shorter or more general terms:
@@ -145,7 +148,7 @@ Combine results by running multiple searches and reviewing the section numbers i
 {% endstep %}
 
 {% step %}
-### Read Info Documentation for GNU Commands
+#### Read Info Documentation for GNU Commands
 
 For GNU tools such as `ls`, `grep`, and `tar`, read extended documentation with `info`.
 
@@ -181,31 +184,21 @@ A `man -f` result identical to `whatis` output confirms the man page database is
 {% hint style="warning" %}
 **Common problems and fixes**
 
-**`whatis ls` returns `ls: nothing appropriate`**
-→ Cause: Man page database is out of date or not yet built.
-→ Fix: Run `sudo mandb` to rebuild, then retry.
+**`whatis ls` returns `ls: nothing appropriate`** → Cause: Man page database is out of date or not yet built. → Fix: Run `sudo mandb` to rebuild, then retry.
 
----
+***
 
-**`command --help` exits immediately or shows an error**
-→ Cause: Command does not support `--help`; may be a shell builtin.
-→ Fix: Run `help commandname` for builtins, or `man commandname`.
+**`command --help` exits immediately or shows an error** → Cause: Command does not support `--help`; may be a shell builtin. → Fix: Run `help commandname` for builtins, or `man commandname`.
 
----
+***
 
-**`man ls` displays `No manual entry for ls`**
-→ Cause: The `man-pages` package is not installed.
-→ Fix: Run `sudo dnf install man-pages man-db`.
+**`man ls` displays `No manual entry for ls`** → Cause: The `man-pages` package is not installed. → Fix: Run `sudo dnf install man-pages man-db`.
 
----
+***
 
-**`apropos keyword` returns nothing**
-→ Cause: Database not indexed, or keyword too specific.
-→ Fix: Run `sudo mandb`, then try a broader keyword.
+**`apropos keyword` returns nothing** → Cause: Database not indexed, or keyword too specific. → Fix: Run `sudo mandb`, then try a broader keyword.
 
----
+***
 
-**`info command` shows a generic reader rather than the command's page**
-→ Cause: No standalone info page exists for that command.
-→ Fix: Fall back to `man commandname` or `commandname --help`.
+**`info command` shows a generic reader rather than the command's page** → Cause: No standalone info page exists for that command. → Fix: Fall back to `man commandname` or `commandname --help`.
 {% endhint %}

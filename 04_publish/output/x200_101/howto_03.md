@@ -1,20 +1,22 @@
 ---
-description: Inspect the current $PATH, add a directory for the current session, and persist the change so it survives a new login shell.
+description: >-
+  Inspect the current $PATH, add a directory for the current session, and
+  persist the change so it survives a new login shell.
 icon: wrench
 ---
 
-# How to Identify and Modify $PATH for Command Availability
+# How-to 3: Identify and Modify PATH for Command Availability
 
 {% hint style="info" %}
 **Prerequisites**
 
-- An interactive Bash shell as a regular user (not root)
-- A target directory to add — either an existing one such as `/opt/myapp/bin` or a custom directory you have already created
+* An interactive Bash shell as a regular user (not root)
+* A target directory to add — either an existing one such as `/opt/myapp/bin` or a custom directory you have already created
 {% endhint %}
 
 {% stepper %}
 {% step %}
-### Inspect the Current $PATH
+#### Inspect the Current $PATH
 
 Display the current search path:
 
@@ -34,7 +36,7 @@ Note the order — the shell searches directories **left to right** and stops at
 {% endstep %}
 
 {% step %}
-### Check Whether Your Directory Is Already in $PATH
+#### Check Whether Your Directory Is Already in $PATH
 
 Search for the target directory before making any change:
 
@@ -46,7 +48,7 @@ If the command returns no output, the directory is not in `$PATH` and must be ad
 {% endstep %}
 
 {% step %}
-### Add the Directory for the Current Session
+#### Add the Directory for the Current Session
 
 {% tabs %}
 {% tab title="Prepend (higher priority)" %}
@@ -76,7 +78,7 @@ Never write `export PATH=/opt/myapp/bin` without including `$PATH`. This discard
 {% endstep %}
 
 {% step %}
-### Persist the Change in ~/.bash_profile
+#### Persist the Change in \~/.bash\_profile
 
 Append the export line to `~/.bash_profile`:
 
@@ -89,6 +91,7 @@ Use **single quotes** so that `$PATH` is written literally into the file. The sh
 {% endhint %}
 
 <details>
+
 <summary>Non-login interactive shells — also update ~/.bashrc</summary>
 
 Many terminal emulators (GNOME Terminal, VS Code terminal, tmux) open non-login interactive shells that source `~/.bashrc` instead of `~/.bash_profile`. To cover both cases, add the same export line to `~/.bashrc`:
@@ -107,7 +110,7 @@ echo '[ -f ~/.bash_profile ] && source ~/.bash_profile' >> ~/.bashrc
 {% endstep %}
 
 {% step %}
-### Verify the Change Survives a New Login Shell
+#### Verify the Change Survives a New Login Shell
 
 Force Bash to re-read the login profile without logging out:
 
@@ -151,26 +154,17 @@ mycommand is /opt/myapp/bin/mycommand
 ## Troubleshooting
 
 {% hint style="warning" %}
-**Command still not found after adding the directory**
-Symptom: running the command still returns `command not found`
-Cause: directory path not saved correctly, or typo in path
-Fix: run `echo $PATH | tr ':' '\n'` and confirm the exact path appears
+**Command still not found after adding the directory** Symptom: running the command still returns `command not found` Cause: directory path not saved correctly, or typo in path Fix: run `echo $PATH | tr ':' '\n'` and confirm the exact path appears
 
----
+***
 
-**Change lost after opening a new terminal**
-Symptom: `$PATH` reverts to the original value in new terminals
-Cause: export added to `~/.bashrc` instead of `~/.bash_profile`, or the terminal opens a non-login shell
-Fix: verify the export line is in `~/.bash_profile`; for non-login interactive shells, also add it to `~/.bashrc`
+**Change lost after opening a new terminal** Symptom: `$PATH` reverts to the original value in new terminals Cause: export added to `~/.bashrc` instead of `~/.bash_profile`, or the terminal opens a non-login shell Fix: verify the export line is in `~/.bash_profile`; for non-login interactive shells, also add it to `~/.bashrc`
 
----
+***
 
-**New login shell does not pick up the change**
-Symptom: `exec bash --login` does not include the new directory
-Cause: `~/.bash_profile` was not saved, or the file contains a syntax error that aborted loading
-Fix: run `bash --login -c 'echo loaded'` — if it fails silently, check for syntax errors with:
+**New login shell does not pick up the change** Symptom: `exec bash --login` does not include the new directory Cause: `~/.bash_profile` was not saved, or the file contains a syntax error that aborted loading Fix: run `bash --login -c 'echo loaded'` — if it fails silently, check for syntax errors with:
 
-```bash
+````bash
 bash -n ~/.bash_profile
 ---
 
@@ -181,16 +175,13 @@ Fix: ensure the export contains `$PATH`:
 
 ```bash
 export PATH=/opt/myapp/bin:$PATH
-```
+````
 
 Not: `export PATH=/opt/myapp/bin`
 
----
+***
 
-**Permission denied running a command in the added directory**
-Symptom: shell finds the command but returns `Permission denied`
-Cause: the binary is not executable
-Fix:
+**Permission denied running a command in the added directory** Symptom: shell finds the command but returns `Permission denied` Cause: the binary is not executable Fix:
 
 ```bash
 chmod +x /opt/myapp/bin/mycommand
