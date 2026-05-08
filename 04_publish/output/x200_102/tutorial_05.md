@@ -16,44 +16,6 @@ By the end, we will have built a four-command pipeline that extracts all unique 
 - Basic familiarity with running single commands such as `ls`, `grep`, and `cat`
 {% endhint %}
 
-## What We'll Build
-
-The final pipeline and its output will look like this:
-
-```bash
-cat /etc/passwd | grep -v '^#' | cut -d: -f7 | sort | uniq -c
-```
-
-```
-      1 /bin/sync
-      1 /sbin/halt
-     22 /sbin/nologin
-      1 /sbin/shutdown
-```
-
-After inserting `tee` to capture an intermediate snapshot:
-
-```bash
-cat /etc/passwd | grep -v '^#' | cut -d: -f7 | tee /tmp/shells_raw.txt | sort | uniq -c
-```
-
-```
-      1 /bin/sync
-     22 /sbin/nologin
-      1 /sbin/shutdown
-```
-
-```bash
-cat /tmp/shells_raw.txt | head -5
-```
-
-```
-/bin/sync
-/sbin/halt
-/sbin/nologin
-...
----
-
 {% stepper %}
 {% step %}
 ### Run a Single Command and Observe Its Output

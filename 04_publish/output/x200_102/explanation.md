@@ -141,6 +141,8 @@ The `tee` command addresses a specific need that arises in pipeline work: someti
 
 ```bash title="tee captures intermediate output while the pipeline continues"
 ps aux | tee /tmp/process-snapshot.txt | grep httpd
+```
+
 ---
 
 ## Why This Design

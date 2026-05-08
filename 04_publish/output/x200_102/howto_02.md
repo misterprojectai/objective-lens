@@ -34,7 +34,6 @@ Run the same command again, or a different command, using `>>` to the same file.
 
 ```bash
 date >> ~/command.log
-```
 {% endstep %}
 
 {% step %}
@@ -44,7 +43,6 @@ Continue appending as many times as needed. Each invocation adds to the end of t
 
 ```bash
 uptime >> ~/command.log
-```
 {% endstep %}
 
 {% step %}
@@ -54,7 +52,6 @@ Any command that produces stdout works with `>>`. Use the full command as you wo
 
 ```bash
 df -h >> ~/command.log
-```
 {% endstep %}
 
 {% step %}
