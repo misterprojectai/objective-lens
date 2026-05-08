@@ -245,9 +245,10 @@ This command uses line continuations (`\`). The backslash must be the very last 
 {% endhint %}
 
 {% hint style="success" %}
-**Expected output**
+**Expected output** — day classification reflects whichever day you run this.
 
---- expansion demo complete ---
+```
+expansion demo complete
 unquoted variable : hello world
 single-quoted     : $WORD
 double-quoted     : hello world
@@ -256,8 +257,6 @@ command sub result: today is a weekday or weekend
 glob unquoted     : file1.txt file2.txt file3.txt
 glob single-quoted: *.txt
 ```
-
-The day classification in your output will reflect the actual day you ran the tutorial.
 {% endhint %}
 {% endstep %}
 {% endstepper %}
