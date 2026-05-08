@@ -23,7 +23,6 @@ if len(sys.argv) < 2:
     sys.exit(1)
 
 OBJECTIVE_FILE = sys.argv[1]
-os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 if not os.path.exists(OBJECTIVE_FILE):
     print(f"ERROR: Objective file not found: {OBJECTIVE_FILE}")
