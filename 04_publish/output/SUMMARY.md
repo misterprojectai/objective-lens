@@ -1,6 +1,8 @@
-# Summary
+# Table of contents
 
-## RHCSA — x200_101
+* [README](README.md)
+
+## RHCSA — x200\_101
 
 * [Understanding the Linux Shell and Command Syntax](x200_101/explanation.md)
 * [Bash Shell and Command Syntax Reference](x200_101/reference.md)
