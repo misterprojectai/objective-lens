@@ -43,7 +43,6 @@ if len(sys.argv) < 2:
     sys.exit(1)
 
 MAPPED_FILE = sys.argv[1]
-os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 if not os.path.exists(MAPPED_FILE):
     print(f"ERROR: Mapped passages file not found: {MAPPED_FILE}")
@@ -97,16 +96,28 @@ print()
 client = anthropic.Anthropic()
 
 def call_sonnet(system_prompt, user_prompt, label, max_tokens=8192):
+    import time
     print(f"  [{label}] Calling Sonnet 4.6...", end="", flush=True)
-    response = client.messages.create(
-        model="claude-sonnet-4-6",
-        max_tokens=max_tokens,
-        system=system_prompt,
-        messages=[{"role": "user", "content": user_prompt}]
-    )
-    result = response.content[0].text
-    print(f" done ({len(result):,} chars)")
-    return result
+    for attempt in range(1, 4):
+        try:
+            response = client.messages.create(
+                model="claude-sonnet-4-6",
+                max_tokens=max_tokens,
+                system=system_prompt,
+                messages=[{"role": "user", "content": user_prompt}]
+            )
+            result = response.content[0].text
+            print(f" done ({len(result):,} chars)")
+            return result
+        except Exception as e:
+            if attempt < 3:
+                wait = 30 * attempt
+                print(f" rate limit (attempt {attempt}/3) — waiting {wait}s...", end="", flush=True)
+                time.sleep(wait)
+                print(f" retrying...", end="", flush=True)
+            else:
+                print(f" FAILED after 3 attempts: {e}")
+                raise
 
 def strip_source_comments(text):
     """Remove <!-- Source: ... --> comment lines."""
