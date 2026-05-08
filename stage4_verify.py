@@ -248,19 +248,21 @@ if os.path.exists(SUMMARY_FILE):
     else:
         fail("SUMMARY.md: section for " + objective_id + " missing")
 
+    # Paths in SUMMARY.md are relative to .gitbook.yaml root (04_publish/output/)
+    # so they appear as x200_101/fname.md, not 04_publish/output/x200_101/fname.md
     missing_links = []
     for fname in all_expected:
-        rel_path = normalise_path(os.path.join(OUTPUT_DIR, fname))
-        if rel_path not in summary:
+        gitbook_path = objective_id + "/" + fname
+        if gitbook_path not in summary:
             missing_links.append(fname)
     if missing_links:
         fail("SUMMARY.md: links missing for: " + str(missing_links))
     else:
         ok("SUMMARY.md: all " + str(len(all_expected)) + " output files linked")
 
-    # Duplicate link check
+    # Duplicate link check — match GitBook-relative paths
     link_pattern = re.findall(
-        r'\(' + re.escape(normalise_path(OUTPUT_DIR)) + r'/[^\)]+\)',
+        r'\(' + re.escape(objective_id) + r'/[^\)]+\)',
         summary
     )
     seen  = set()

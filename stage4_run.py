@@ -359,9 +359,21 @@ def call_sonnet(system_prompt, source_doc, label):
 # ── SUMMARY.md ────────────────────────────────────────────────────────────────
 
 def build_summary_section(objective_id, file_map):
+    """
+    Path fix: .gitbook.yaml root: ./04_publish/output means SUMMARY.md paths
+    must be relative to that root — strip OUTPUT_BASE prefix so paths read as
+    x200_101/explanation.md not 04_publish/output/x200_101/explanation.md.
+
+    Link text fix: strip surrounding quotes Sonnet may include in title metadata.
+    """
+    root_prefix = normalise_path(OUTPUT_BASE) + "/"
     lines = ["## RHCSA — " + objective_id, ""]
     for link_text, path in file_map:
-        lines.append("* [" + link_text + "](" + normalise_path(path) + ")")
+        clean_text = link_text.strip('"\'\' ')
+        clean_path = normalise_path(path)
+        if clean_path.startswith(root_prefix):
+            clean_path = clean_path[len(root_prefix):]
+        lines.append("* [" + clean_text + "](" + clean_path + ")")
     lines.append("")
     return "\n".join(lines)
 
