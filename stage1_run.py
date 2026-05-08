@@ -17,8 +17,17 @@ from datetime import date
 import ftfy
 import anthropic
 
-INPUT_DIR = "01_normalize/input"
-OUTPUT_DIR = "01_normalize/output"
+# Objective ID passed as first argument (e.g. x200_102)
+# Usage: python3 stage1_run.py x200_102
+if len(sys.argv) > 1 and not sys.argv[1].startswith("01_normalize"):
+    _OBJ = sys.argv[1]
+else:
+    _OBJ = "x200_101"  # default for backward compatibility
+
+INPUT_DIR  = f"01_normalize/input/{_OBJ}"
+OUTPUT_DIR = f"01_normalize/output/{_OBJ}"
+os.makedirs(INPUT_DIR, exist_ok=True)
+os.makedirs(OUTPUT_DIR, exist_ok=True)
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 SUPPORTED = {".pdf", ".md", ".txt", ".srt", ".html", ".docx"}

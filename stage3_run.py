@@ -20,7 +20,7 @@ Quantity constraints:
   MIN_HOWTOS    = 3, MAX_HOWTOS    = 7
 
 Usage:
-  python3 stage3_run.py 02_map/output/x200_101_mapped-passages.md
+  python3 stage3_run.py 02_map/output/x200_101/x200_101_mapped-passages.md
 """
 
 import sys
@@ -39,11 +39,10 @@ MIN_HOWTOS    = 3
 MAX_HOWTOS    = 7
 
 if len(sys.argv) < 2:
-    print("Usage: python3 stage3_run.py 02_map/output/x200_101_mapped-passages.md")
+    print("Usage: python3 stage3_run.py 02_map/output/x200_101/x200_101_mapped-passages.md")
     sys.exit(1)
 
 MAPPED_FILE = sys.argv[1]
-OUTPUT_DIR  = "03_diataxis/output"
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 if not os.path.exists(MAPPED_FILE):
@@ -52,6 +51,8 @@ if not os.path.exists(MAPPED_FILE):
 
 basename     = os.path.basename(MAPPED_FILE)
 objective_id = basename.replace("_mapped-passages.md", "")
+OUTPUT_DIR  = f"03_diataxis/output/{objective_id}"
+os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 print(f"Stage 3 - Diataxis Transformation")
 print(f"Input:       {MAPPED_FILE}")

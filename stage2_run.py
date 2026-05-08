@@ -23,8 +23,6 @@ if len(sys.argv) < 2:
     sys.exit(1)
 
 OBJECTIVE_FILE = sys.argv[1]
-CLEAN_DIR = "01_normalize/output"
-OUTPUT_DIR = "02_map/output"
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 if not os.path.exists(OBJECTIVE_FILE):
@@ -32,6 +30,9 @@ if not os.path.exists(OBJECTIVE_FILE):
     sys.exit(1)
 
 objective_id = os.path.splitext(os.path.basename(OBJECTIVE_FILE))[0]
+CLEAN_DIR  = f"01_normalize/output/{objective_id}"
+OUTPUT_DIR = f"02_map/output/{objective_id}"
+os.makedirs(OUTPUT_DIR, exist_ok=True)
 output_path = f"{OUTPUT_DIR}/{objective_id}_mapped-passages.md"
 
 print(f"Stage 2 - Objective Map")
