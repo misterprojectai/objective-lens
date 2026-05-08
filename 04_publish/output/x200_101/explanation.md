@@ -272,18 +272,54 @@ The shell is not one RHCSA skill among others — it is the medium through which
 
 ## What to Do Next
 
-{% content-ref url="tutorial-first-commands-at-the-shell-prompt.md" %}
-tutorial-first-commands-at-the-shell-prompt.md
+{% content-ref url="tutorial_01.md" %}
+Tutorial 1: Open Your First Shell Session on RHEL
 {% endcontent-ref %}
 
-{% content-ref url="howto-access-a-shell-prompt-on-rhel.md" %}
-howto-access-a-shell-prompt-on-rhel.md
+{% content-ref url="tutorial_02.md" %}
+Tutorial 2: Issue Commands with Correct Syntax
 {% endcontent-ref %}
 
-{% content-ref url="howto-use-command-history-and-keyboard-shortcuts.md" %}
-howto-use-command-history-and-keyboard-shortcuts.md
+{% content-ref url="tutorial_03.md" %}
+Tutorial 3: Trace How the Shell Finds Commands
 {% endcontent-ref %}
 
-{% content-ref url="reference-bash-command-syntax-and-options.md" %}
-reference-bash-command-syntax-and-options.md
+{% content-ref url="tutorial_04.md" %}
+Tutorial 4: Read and Set Shell Variables
+{% endcontent-ref %}
+
+{% content-ref url="tutorial_05.md" %}
+Tutorial 5: Control Shell Expansion and Quoting
+{% endcontent-ref %}
+
+{% content-ref url="tutorial_06.md" %}
+Tutorial 6: Work Efficiently with Command History and Line Editing
+{% endcontent-ref %}
+
+{% content-ref url="howto_01.md" %}
+How-to 1: Get Help for Any Command at the Shell Prompt
+{% endcontent-ref %}
+
+{% content-ref url="howto_02.md" %}
+How-to 2: Diagnose and Fix a command not found Error
+{% endcontent-ref %}
+
+{% content-ref url="howto_03.md" %}
+How-to 3: Identify and Modify PATH for Command Availability
+{% endcontent-ref %}
+
+{% content-ref url="howto_04.md" %}
+How-to 4: Use Command History to Recall and Re-execute Commands
+{% endcontent-ref %}
+
+{% content-ref url="howto_05.md" %}
+How-to 5: Audit the Shell Environment Before Running Administrative Tasks
+{% endcontent-ref %}
+
+{% content-ref url="howto_06.md" %}
+How-to 6: Use Quoting and Escaping to Handle Special Characters
+{% endcontent-ref %}
+
+{% content-ref url="reference.md" %}
+Bash Shell and Command Syntax Reference
 {% endcontent-ref %}
