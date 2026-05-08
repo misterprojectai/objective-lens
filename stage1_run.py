@@ -28,21 +28,17 @@ INPUT_DIR  = f"01_normalize/input/{_OBJ}"
 OUTPUT_DIR = f"01_normalize/output/{_OBJ}"
 os.makedirs(INPUT_DIR, exist_ok=True)
 os.makedirs(OUTPUT_DIR, exist_ok=True)
-os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 SUPPORTED = {".pdf", ".md", ".txt", ".srt", ".html", ".docx"}
 
 # ── File discovery ────────────────────────────────────────────────────────────
 
-if len(sys.argv) > 1:
-    input_files = [sys.argv[1]]
-else:
-    input_files = sorted([
-        os.path.join(INPUT_DIR, f)
-        for f in os.listdir(INPUT_DIR)
-        if os.path.splitext(f)[1].lower() in SUPPORTED
-        and not f.startswith(".")
-    ])
+input_files = sorted([
+    os.path.join(INPUT_DIR, f)
+    for f in os.listdir(INPUT_DIR)
+    if os.path.splitext(f)[1].lower() in SUPPORTED
+    and not f.startswith(".")
+])
 
 print(f"Stage 1 - Normalize")
 print(f"Files to process: {len(input_files)}")
