@@ -12,18 +12,7 @@ icon: graduation-cap
 - Completion of Tutorial 4: Navigate the Filesystem with Absolute and Relative Paths, or equivalent familiarity with moving between directories
 {% endhint %}
 
-By the end of this tutorial, you will have run a controlled sequence of commands that demonstrates Bash expansion in action and shows precisely how quoting suppresses it. The final verification step will produce this output:
-
-```
---- expansion demo complete ---
-unquoted variable : hello world
-single-quoted     : $WORD
-double-quoted     : hello world
-backslash-escaped : $WORD
-command sub result: today is a weekday or weekend
-glob unquoted     : file1.txt file2.txt file3.txt
-glob single-quoted: *.txt
-```
+By the end of this tutorial, you will have run a controlled sequence of commands that demonstrates Bash expansion in action and shows precisely how quoting suppresses it. The final verification step will produce this output as shown in the final step.
 
 {% stepper %}
 {% step %}
