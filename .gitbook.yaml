@@ -1,0 +1,5 @@
+root: ./04_publish/output
+
+structure:
+  readme: ./README.md
+  summary: ./SUMMARY.md
