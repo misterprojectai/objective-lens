@@ -18,7 +18,7 @@ By the end of this tutorial, you will have confirmed Bash as your active shell i
 
 ```
 /bin/bash
----
+```
 
 {% stepper %}
 {% step %}
