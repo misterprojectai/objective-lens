@@ -11,9 +11,9 @@ Writes to:   05_iximiuz/output/<name>/index.md
 Deploys via: labctl content create challenge + labctl content push
 
 Usage:
-  python3 stage5b_run.py x200_101                    # all 12 challenges
-  python3 stage5b_run.py x200_101 4 clean            # howto_04 Format 1 only
-  python3 stage5b_run.py x200_101 4 broken           # howto_04 Format 2 only
+  python3 stage5b_run.py x200_101                 # all 12 challenges
+  python3 stage5b_run.py x200_101 4 clean         # howto_04 Format 1 only
+  python3 stage5b_run.py x200_101 4 broken        # howto_04 Format 2 only
 """
 
 import anthropic
@@ -40,21 +40,22 @@ MAX_TOKENS = 16000
 STAGE3_DIR = "03_diataxis/output"
 STAGE5_DIR = "05_iximiuz/output"
 
-SKILL_FILE      = "_config/iximiuz-ref/iximiuz-CLAUDE.md"
+SKILL_FILE       = "_config/iximiuz-ref/iximiuz-CLAUDE.md"
 SAMPLE_CHALLENGE = "_config/iximiuz-ref/iximiuz-sample-challenge.md"
+SAMPLE_TRIM      = 5000  # token efficiency — full file is ~10KB
 
 CATEGORY_NAMES = {
     "linux", "networking", "containers", "kubernetes",
     "programming", "observability", "security", "ci-cd",
     "generative-ai", "cloud", "iac"
 }
-FORBIDDEN_TAGS = CATEGORY_NAMES | {"ex200"}
-
+FORBIDDEN_TAGS    = CATEGORY_NAMES | {"ex200"}
 VALID_DIFFICULTIES = {"easy", "medium", "hard"}
 
 # ── PNG GENERATION ───────────────────────────────────────────────────────────
 
 def create_cover_png():
+    """Create a minimal valid 1x1 white PNG as cover placeholder."""
     def chunk(ctype, data):
         c = ctype + data
         return struct.pack('>I', len(data)) + c + struct.pack('>I', zlib.crc32(c) & 0xffffffff)
@@ -84,15 +85,21 @@ def write_binary(path, data):
 # ── FRONTMATTER ──────────────────────────────────────────────────────────────
 
 def extract_frontmatter(content):
+    """
+    Returns (fm_dict, error_str).
+    fm_dict is {} and error_str is set if YAML parse fails.
+    """
     match = re.match(r'^---\n(.*?)\n---', content, re.DOTALL)
     if not match:
-        return {}
+        return {}, "No frontmatter block found"
     try:
-        return yaml.safe_load(match.group(1)) or {}
-    except Exception:
-        return {}
+        fm = yaml.safe_load(match.group(1)) or {}
+        return fm, None
+    except yaml.YAMLError as e:
+        return {}, str(e)
 
 def strip_preamble(content):
+    """Strip any text Sonnet prepends before the opening --- frontmatter."""
     lines = content.splitlines(keepends=True)
     for i, line in enumerate(lines):
         if line.strip() == '---':
@@ -102,18 +109,19 @@ def strip_preamble(content):
 # ── DOCUMENT DISCOVERY ───────────────────────────────────────────────────────
 
 def build_name(obj_id, index, fmt):
+    """Build iximiuz content name: rhcsa-x200101-challenge-4 or -broken-4"""
     slug = obj_id.replace('_', '')
     if fmt == 'clean':
         return f"rhcsa-{slug}-challenge-{index}"
-    else:
-        return f"rhcsa-{slug}-challenge-broken-{index}"
+    return f"rhcsa-{slug}-challenge-broken-{index}"
 
 def get_stage3_howtos(obj_id, filter_index=None):
+    """Return ordered list of how-to docs to process."""
     stage3_dir = Path(STAGE3_DIR) / obj_id
     docs = []
     for path in sorted(stage3_dir.glob(f"{obj_id}_howto_*.md")):
-        fm    = extract_frontmatter(read_file(path))
-        index = fm.get('howto_index', 1)
+        fm, _  = extract_frontmatter(read_file(path))
+        index  = fm.get('howto_index', 1)
         docs.append({
             'path':        path,
             'frontmatter': fm,
@@ -126,32 +134,12 @@ def get_stage3_howtos(obj_id, filter_index=None):
 
 # ── SERVER NAME DETECTION ────────────────────────────────────────────────────
 
-def get_server_name(base_name, pause=1):
-    if pause:
-        time.sleep(pause)
-    result = subprocess.run(
-        ['labctl', 'content', 'list', '--kind', 'tutorial'],
-        capture_output=True, text=True
-    )
-    if result.returncode != 0:
-        return None
-    # Also check challenges
-    result2 = subprocess.run(
-        ['labctl', 'content', 'list'],
-        capture_output=True, text=True
-    )
-    hex_pat = re.compile(rf'^{re.escape(base_name)}-[0-9a-f]{{8}}$')
-    for output in [result.stdout, result2.stdout]:
-        for line in output.splitlines():
-            line = line.strip()
-            if line.startswith('name:'):
-                name = line.split(':', 1)[1].strip()
-                if name == base_name or hex_pat.match(name):
-                    return name
-    return None
-
 def get_server_name_challenge(base_name, pause=1):
-    """Query challenge list for server name."""
+    """
+    Get actual server name after create.
+    iximiuz appends an 8-char hex suffix: base-name-a1b2c3d4.
+    Queries challenge list specifically.
+    """
     if pause:
         time.sleep(pause)
     result = subprocess.run(
@@ -182,13 +170,58 @@ DIFFICULTY_MAP = {
 }
 
 def map_difficulty(raw, fmt):
+    """Map Stage 3 difficulty string to iximiuz difficulty.
+    Broken environment is always one level harder than clean slate."""
     base = DIFFICULTY_MAP.get(raw, 'medium')
-    # Broken environment is always one level harder
     if fmt == 'broken':
-        if base == 'easy':
-            return 'medium'
-        return 'hard'
+        return 'medium' if base == 'easy' else 'hard'
     return base
+
+# ── YAML SAFETY RULES BLOCK (shared between both system prompts) ──────────────
+
+_YAML_SAFETY = """
+## YAML SAFETY RULES — run: block scripts
+
+### No heredocs
+YAML run: blocks cannot contain heredoc syntax. The bare `EOF` marker on its
+own line breaks YAML parsing and causes push failure.
+
+WRONG:
+  run: |
+    cat << 'EOF' >> ~/.bashrc
+    export VAR=value
+    EOF
+
+CORRECT:
+  run: |
+    echo 'export VAR=value' >> /home/laborant/.bashrc
+
+### No unquoted special characters in YAML values
+Avoid unquoted: `[`, `]`, `*`, `{`, `}`, `?`, `|`, `>`, `!`, `%`, `@`, `&`
+These are YAML metacharacters. Use double-quoted strings when values contain them.
+
+### No code fences inside YAML frontmatter
+Never put ``` inside the frontmatter block. Code examples belong in the
+markdown body only.
+
+## CRITICAL — Rocky Linux .bashrc Non-Interactive Guard
+
+Rocky Linux .bashrc starts with a non-interactive guard:
+  case $-
+    *i*) ;;
+      *) return;;
+  esac
+
+This causes `source ~/.bashrc` to exit immediately in non-interactive subshells.
+
+WRONG — always fails on Rocky Linux:
+  bash --norc --noprofile -c 'source /home/laborant/.bashrc; echo $VAR'
+  bash -c 'source ~/.bashrc 2>/dev/null; echo $VAR'
+
+CORRECT — grep the file directly for persistence checks:
+  LAST=$(grep -E '^(export )?VARNAME=' /home/laborant/.bashrc | tail -1 | cut -d= -f2- | tr -d "'\\"")
+  echo "$LAST" | grep -qE 'expected_value' || exit 1
+"""
 
 # ── SYSTEM PROMPTS ───────────────────────────────────────────────────────────
 
@@ -202,43 +235,39 @@ They either know how to do it or they look it up. Automated verification checks 
 ## What a Challenge Is
 
 A challenge is NOT a tutorial. No steps, no explanations in the body.
-The body contains only:
+The body contains ONLY:
 1. One sentence: what the situation is
 2. The task statement: exactly what the learner must do
 3. ::simple-task or ::user-input-task blocks (one per verification task)
-4. ::hint-box blocks (optional, numbered, progressive — from vague to specific)
+4. ::hint-box blocks (optional, numbered, progressive — vague to specific)
 
-The challenge body should be SHORT. 50-150 lines maximum.
+The challenge body must be SHORT — 50 to 150 lines maximum.
 The solution goes in solution.md — NOT in the challenge body.
 
 ## Hard Constraints
 
 - kind: challenge — FIXED, no exceptions
-- difficulty: easy, medium, or hard — required
+- difficulty: easy, medium, or hard — required field
 - cover: __static__/cover.png — exact string
 - machine: rocky-01 — always
 - Max 5 tagz, no category names, no ex200
-- NO init_history_flush — challenges verify final system state, not history
+- NO init tasks unless needed to pre-stage the environment
 - NO guided steps in the body
 - NO GitBook liquid syntax ({%, %})
-- Verification tasks check OUTCOME (file exists, setting active, command works) — not history
-- Every verify_/input_ task in frontmatter must have a paired ::simple-task in body
-
-## Verification Pattern (state-based, not history-based)
+- Verification tasks check OUTCOME (file exists, setting active, command works)
+- Every verify_/input_ task in frontmatter MUST have a paired ::simple-task in body
+""" + _YAML_SAFETY + """
+## Verification Pattern — State-Based (NOT history-based)
 
 ```yaml
-verify_setting_persistent:
-  machine: rocky-01
-  user: laborant
-  run: |
-    # Source the config file to pick up new settings
-    source /home/laborant/.bashrc 2>/dev/null
-    # Check the actual outcome
-    [ -n "$HISTTIMEFORMAT" ] || exit 1
-    grep -q 'HISTTIMEFORMAT' /home/laborant/.bashrc || exit 1
-  hintcheck: |
-    echo "Check: grep HISTTIMEFORMAT ~/.bashrc"
-    echo "The setting must be in ~/.bashrc AND active in a new shell session."
+  verify_setting_persistent:
+    machine: rocky-01
+    user: laborant
+    run: |
+      LAST=$(grep -E '^(export )?VARNAME=' /home/laborant/.bashrc | tail -1 | cut -d= -f2- | tr -d "'\\"")
+      echo "$LAST" | grep -qE 'expected_value' || exit 1
+    hintcheck: |
+      echo "Check: grep VARNAME ~/.bashrc"
 ```
 
 ## Playground Template
@@ -256,7 +285,7 @@ playground:
 ## Challenge Body Template
 
 ```markdown
-The `laborant` user's shell needs to be configured for production work.
+The `laborant` user needs to [situation description].
 
 Complete the following task on `rocky-01`.
 
@@ -266,7 +295,7 @@ Complete the following task on `rocky-01`.
 :name: verify_task_name
 ---
 #active
-Task description (what needs to be true)
+What needs to be true when complete.
 
 #completed
 Confirmed ✓
@@ -276,7 +305,7 @@ Confirmed ✓
 ---
 :summary: Hint 1
 ---
-Vague hint that points toward the right area without giving the answer.
+Vague hint pointing toward the right area.
 ::
 
 ::hint-box
@@ -307,14 +336,14 @@ SYSTEM_PROMPT_BROKEN = """You are an expert Linux educator producing RHCSA exam 
 
 You generate FORMAT 2 challenges: BROKEN ENVIRONMENT DIAGNOSIS.
 
-Init tasks deliberately misconfigure the Rocky Linux 9 system. The learner gets a symptom description.
-They investigate, diagnose, and fix the problem. Verification checks that the fix is in place.
+Init tasks deliberately misconfigure the Rocky Linux 9 system. The learner gets a symptom
+description only. They investigate, diagnose, and fix the problem. Verification checks the fix.
 
 ## What Makes This Format Valuable
 
-This is the closest format to real production work and the RHCSA exam.
-The learner is not told what is wrong — only what symptom they are seeing.
-They must use the skills from the corresponding tutorial/how-to to diagnose it.
+This mirrors real production work and the RHCSA exam.
+The learner is told WHAT is wrong (symptom) but not WHY or HOW to fix it.
+They use skills from the corresponding tutorial/how-to to diagnose.
 
 ## Hard Constraints
 
@@ -323,14 +352,13 @@ They must use the skills from the corresponding tutorial/how-to to diagnose it.
 - cover: __static__/cover.png
 - machine: rocky-01 always
 - Max 5 tagz, no category names, no ex200
-- NO init_history_flush — not needed
-- NO guided steps in body
-- NO GitBook liquid syntax
 - The init task CREATES the broken state
 - The verify task checks the FIX is in place
-- failcheck only if the learner does something that makes the system unsolvable
-
-## Init Task Pattern (creates the break)
+- failcheck ONLY if the learner does something irreversible
+- NO guided steps in body
+- NO GitBook liquid syntax
+""" + _YAML_SAFETY + """
+## Init Task Pattern — Creates the Break
 
 ```yaml
 tasks:
@@ -338,71 +366,31 @@ tasks:
     init: true
     machine: rocky-01
     run: |
-      # Introduce the specific misconfiguration
-      # Be surgical — break exactly one thing
-      echo 'HISTSIZE=0' >> /home/laborant/.bashrc
-      echo 'HISTFILESIZE=0' >> /home/laborant/.bashrc
+      echo 'export HISTSIZE=0' >> /home/laborant/.bashrc
+      echo 'export HISTFILESIZE=0' >> /home/laborant/.bashrc
       chown laborant:laborant /home/laborant/.bashrc
 ```
 
-## CRITICAL — No Heredocs in YAML run: blocks
-
-YAML parses `run: |` blocks as literal strings. A bare EOF or heredoc
-marker on its own line breaks YAML parsing and causes push failure.
-
-WRONG — heredoc inside run: block:
-  run: |
-    cat << 'EOF' >> ~/.bashrc
-    export VAR=value
-    EOF
-
-CORRECT — use echo or printf instead:
-  run: |
-    echo 'export VAR=value' >> /home/laborant/.bashrc
-    printf 'export VAR=value\n' >> /home/laborant/.bashrc
-
-Also avoid single quotes containing special glob chars like [, ], * in
-YAML values — they break YAML parsing. Use double quotes or escape them.
-
-## CRITICAL — Rocky Linux .bashrc Non-Interactive Guard
-
-Rocky Linux .bashrc has a non-interactive guard (case $-) that causes
-source ~/.bashrc to exit immediately in non-interactive subshells.
-NEVER use subshell sourcing to verify persistence.
-
-CORRECT — grep the file directly:
-  LAST=$(grep -E '^(export )?VARNAME=' /home/laborant/.bashrc | tail -1 | cut -d= -f2- | tr -d "'\"")
-  echo "$LAST" | grep -qE 'expected_value' || exit 1
-
-WRONG — never use:
-  bash --norc --noprofile -c 'source /home/laborant/.bashrc; echo $VAR'
-  bash -c 'source ~/.bashrc 2>/dev/null; echo $VAR'
-
-## Verify Task Pattern (checks the fix)
+## Verify Task Pattern — Checks the Fix
 
 ```yaml
-  verify_history_restored:
+  verify_fixed:
     machine: rocky-01
     user: laborant
     run: |
-      source /home/laborant/.bashrc 2>/dev/null
-      # HISTSIZE must be set and non-zero
-      [ -n "$HISTSIZE" ] && [ "$HISTSIZE" != "0" ] || exit 1
-      # Must persist — check the file
-      grep -qE '^HISTSIZE=[1-9]' /home/laborant/.bashrc || exit 1
+      LAST=$(grep -E '^(export )?HISTSIZE=' /home/laborant/.bashrc | tail -1 | cut -d= -f2- | tr -d "'\\"")
+      [ -n "$LAST" ] && [ "$LAST" != "0" ] || exit 1
     hintcheck: |
-      source /home/laborant/.bashrc 2>/dev/null
-      echo "Current HISTSIZE: ${HISTSIZE:-unset}"
+      echo "Current last HISTSIZE assignment:"
       grep 'HISTSIZE' /home/laborant/.bashrc | tail -3
 ```
 
-## failcheck Pattern (only for catastrophic user actions)
+## failcheck Pattern — Only for Catastrophic User Actions
 
 ```yaml
     failcheck: |
-      # Only fail the playground if .bashrc is completely gone
       [ -f /home/laborant/.bashrc ] || {
-        echo ".bashrc has been deleted — restart the challenge"
+        echo ".bashrc deleted — restart the challenge"
         exit 1
       }
 ```
@@ -419,17 +407,17 @@ playground:
         ramSize: 2Gi
 ```
 
-## Challenge Body Template (short — no steps, no guidance)
+## Challenge Body Template
 
 ```markdown
-The `laborant` user is reporting a problem with [symptom description].
+The `laborant` user is reporting: [symptom description — realistic, no cause given].
 
 Investigate and fix the issue on `rocky-01`.
 
 ::simple-task
 ---
 :tasks: tasks
-:name: verify_fix_name
+:name: verify_fixed
 ---
 #active
 [What needs to be true when fixed]
@@ -465,13 +453,11 @@ The exact command that reveals the problem.
 Produce two sections separated by ===SOLUTION===:
 
 Section 1: complete index.md starting with ---
-Section 2: complete solution.md content
-
-The solution.md should explain:
-1. What was broken and why
-2. How to diagnose it (commands to run)
-3. How to fix it (exact commands)
-4. How to verify the fix"""
+Section 2: complete solution.md explaining:
+  1. What was broken and why the init task created that state
+  2. How to diagnose it (commands to run)
+  3. How to fix it (exact commands)
+  4. How to verify the fix"""
 
 # ── PROMPT BUILDERS ──────────────────────────────────────────────────────────
 
@@ -493,7 +479,7 @@ def build_prompt_clean(doc, skill_content, sample_content):
 
 ## Sample Challenge Format (MDC syntax reference)
 
-{sample_content[:5000]}
+{sample_content[:SAMPLE_TRIM]}
 
 ---
 
@@ -503,11 +489,11 @@ def build_prompt_clean(doc, skill_content, sample_content):
 
 ---
 
-Generate the challenge `{name}` at difficulty `{difficulty}`.
+Generate challenge `{name}` at difficulty `{difficulty}`.
 The task must be completable using skills taught in the source document.
-A learner who completed the corresponding tutorial and how-to should be able to pass this.
+A learner who completed the tutorial and how-to should be able to pass this.
 
-Output format:
+Output:
 [complete index.md]
 ===SOLUTION===
 [complete solution.md]
@@ -533,7 +519,7 @@ def build_prompt_broken(doc, skill_content, sample_content):
 
 ## Sample Challenge Format (MDC syntax reference)
 
-{sample_content[:5000]}
+{sample_content[:SAMPLE_TRIM]}
 
 ---
 
@@ -543,12 +529,14 @@ def build_prompt_broken(doc, skill_content, sample_content):
 
 ---
 
-Generate the challenge `{name}` at difficulty `{difficulty}`.
+Generate challenge `{name}` at difficulty `{difficulty}`.
 Introduce exactly ONE specific misconfiguration via an init task.
 The break must be diagnosable using skills from the source document.
 The symptom description must be realistic — what a user would actually report.
+Use echo/printf in init tasks, never heredocs.
+Use grep to check persistence, never source ~/.bashrc in subshells.
 
-Output format:
+Output:
 [complete index.md]
 ===SOLUTION===
 [complete solution.md]
@@ -558,17 +546,18 @@ Start immediately with --- frontmatter. No preamble."""
 # ── OUTPUT SPLITTING ─────────────────────────────────────────────────────────
 
 def split_output(raw):
-    """Split Sonnet output into (index_md, solution_md)."""
+    """Split Sonnet output into (index_md, solution_md).
+    Warns if separator is absent — indicates Sonnet skipped the solution."""
     content = strip_preamble(raw)
     if '===SOLUTION===' in content:
         parts = content.split('===SOLUTION===', 1)
-        return parts[0].strip(), parts[1].strip()
-    # No solution separator — return content as index, empty solution
-    return content, "Solution not generated."
+        return parts[0].strip() + '\n', parts[1].strip()
+    print("  WARNING: ===SOLUTION=== separator absent — solution.md will be empty")
+    return content, "Solution was not generated. Regenerate with stage5b_run.py."
 
 # ── VALIDATION ───────────────────────────────────────────────────────────────
 
-def validate(content, name, fmt):
+def validate(content, name, fmt, output_dir):
     errors   = []
     warnings = []
 
@@ -576,8 +565,13 @@ def validate(content, name, fmt):
         errors.append("Does not start with frontmatter ---")
         return errors, warnings
 
-    fm = extract_frontmatter(content)
+    # Explicit YAML parse check
+    fm, yaml_err = extract_frontmatter(content)
+    if yaml_err and not fm:
+        errors.append(f"YAML parse failure: {yaml_err}")
+        return errors, warnings
 
+    # Required fields
     if fm.get('kind') != 'challenge':
         errors.append(f"kind='{fm.get('kind')}' must be 'challenge'")
     if not fm.get('title'):
@@ -599,6 +593,7 @@ def validate(content, name, fmt):
     if diff not in VALID_DIFFICULTIES:
         errors.append(f"difficulty='{diff}' must be easy, medium, or hard")
 
+    # tagz
     tagz = [str(t) for t in (fm.get('tagz') or [])]
     if len(tagz) > 5:
         errors.append(f"tagz has {len(tagz)} — max 5")
@@ -606,23 +601,23 @@ def validate(content, name, fmt):
     if bad:
         errors.append(f"tagz contains forbidden tags: {bad}")
 
+    # Tasks
     tasks = fm.get('tasks') or {}
 
-    # Machine name check
+    # Machine name
     for tname, tdef in tasks.items():
         if isinstance(tdef, dict):
             m = tdef.get('machine', '')
             if m and m != 'rocky-01':
                 errors.append(f"Task '{tname}': machine='{m}' must be 'rocky-01'")
 
-    # Format 1: no init tasks that create broken state (should have minimal or no init)
-    # Format 2: must have at least one init task
+    # Format 2 must have at least one init task
     init_tasks = [k for k, v in tasks.items()
                   if isinstance(v, dict) and v.get('init') is True]
     if fmt == 'broken' and not init_tasks:
-        errors.append("Format 2 challenge must have at least one init task to create broken state")
+        errors.append("Format 2 challenge must have at least one init task")
 
-    # Every verify_/input_ task must have paired component
+    # task/component pairing
     for tname in tasks:
         if tname.startswith(('verify_', 'input_')):
             if f':name: {tname}' not in content:
@@ -630,14 +625,21 @@ def validate(content, name, fmt):
 
     # Platform separation
     if '{%' in content or '%}' in content:
-        errors.append("Contains GitBook liquid syntax")
+        errors.append("Contains GitBook liquid syntax — platform violation")
 
-    # Fence in frontmatter
+    # Fence inside frontmatter
     end_fm = content.find('\n---\n', 4)
-    if end_fm > 0:
-        fm_block = content[:end_fm]
-        if '```' in fm_block:
-            errors.append("Code fence found inside frontmatter — will cause push failure")
+    if end_fm > 0 and '```' in content[:end_fm]:
+        errors.append("Code fence (```) inside frontmatter — will cause push failure")
+
+    # solution.md existence
+    solution_path = Path(output_dir) / "solution.md"
+    if solution_path.exists():
+        sol = solution_path.read_text()
+        if "Solution was not generated" in sol:
+            warnings.append("solution.md contains fallback text — regenerate if quality matters")
+    else:
+        warnings.append("solution.md not written yet")
 
     # MDC balance
     opens = content.count('::')
@@ -669,9 +671,10 @@ def call_sonnet(client, system_prompt, user_prompt, attempt=1):
 
 # ── LABCTL ───────────────────────────────────────────────────────────────────
 
-def labctl_create_challenge(name, output_dir):
+def labctl_create(kind, name, output_dir):
+    """Create content on server. Returns actual server name (with hex suffix)."""
     result = subprocess.run(
-        ['labctl', 'content', 'create', 'challenge', name, '--dir', output_dir],
+        ['labctl', 'content', 'create', kind, name, '--dir', output_dir],
         capture_output=True, text=True
     )
     if result.returncode != 0:
@@ -685,6 +688,7 @@ def labctl_create_challenge(name, output_dir):
             return name
         print(f"  ERROR create: {result.stderr.strip()}")
         return None
+
     actual = get_server_name_challenge(name)
     if actual and actual != name:
         print(f"  Server name: {actual}")
@@ -693,9 +697,10 @@ def labctl_create_challenge(name, output_dir):
         print(f"  Created: {actual}")
     return actual
 
-def labctl_push_challenge(actual_name, output_dir):
+def labctl_push(kind, actual_name, output_dir):
+    """Push content to server."""
     result = subprocess.run(
-        ['labctl', 'content', 'push', 'challenge', actual_name,
+        ['labctl', 'content', 'push', kind, actual_name,
          '--dir', output_dir, '--force'],
         capture_output=True, text=True
     )
@@ -708,50 +713,50 @@ def labctl_push_challenge(actual_name, output_dir):
 # ── PROCESS ONE CHALLENGE ────────────────────────────────────────────────────
 
 def process_challenge(client, doc, fmt, skill_content, sample_content, cover):
-    name = doc[f'name_{fmt}']
-    diff = doc[f'difficulty_{fmt}']
+    name       = doc[f'name_{fmt}']
+    diff       = doc[f'difficulty_{fmt}']
     output_dir = str(Path(STAGE5_DIR) / name)
     index_path = str(Path(output_dir) / "index.md")
     solution_path = str(Path(output_dir) / "solution.md")
     cover_path = str(Path(output_dir) / "__static__" / "cover.png")
 
     print(f"\n  [{fmt.upper()}] → {name} ({diff})")
-
-    # Generate
     print(f"    Calling Sonnet 4.6...")
-    if fmt == 'clean':
-        prompt = build_prompt_clean(doc, skill_content, sample_content)
-        sys_prompt = SYSTEM_PROMPT_CLEAN
-    else:
-        prompt = build_prompt_broken(doc, skill_content, sample_content)
-        sys_prompt = SYSTEM_PROMPT_BROKEN
 
-    raw = call_sonnet(client, sys_prompt, prompt)
+    if fmt == 'clean':
+        sys_prompt   = SYSTEM_PROMPT_CLEAN
+        user_prompt  = build_prompt_clean(doc, skill_content, sample_content)
+    else:
+        sys_prompt   = SYSTEM_PROMPT_BROKEN
+        user_prompt  = build_prompt_broken(doc, skill_content, sample_content)
+
+    raw = call_sonnet(client, sys_prompt, user_prompt)
     index_content, solution_content = split_output(raw)
 
-    # Validate
-    errors, warnings = validate(index_content, name, fmt)
+    # Validate (solution not written yet — warns about it)
+    errors, warnings = validate(index_content, name, fmt, output_dir)
     if errors:
         print(f"    ERRORS ({len(errors)}):")
         for e in errors:
             print(f"      ✗ {e}")
     if warnings:
         for w in warnings:
-            print(f"      ⚠ {w}")
-    if not errors and not warnings:
+            if "solution.md not written yet" not in w:  # suppress pre-write warning
+                print(f"      ⚠ {w}")
+    if not errors:
         print(f"    Validation passed ✓")
 
     # Deploy
     os.makedirs(Path(output_dir) / "__static__", exist_ok=True)
-    actual_name = labctl_create_challenge(name, output_dir)
-    created = actual_name is not None
+    actual_name = labctl_create('challenge', name, output_dir)
+    created     = actual_name is not None
 
-    # Write files (overwrite scaffold)
+    # Write files (overwrites scaffold)
     write_file(index_path, index_content)
     write_file(solution_path, solution_content)
     write_binary(cover_path, cover)
 
-    pushed = labctl_push_challenge(actual_name, output_dir) if created else False
+    pushed = labctl_push('challenge', actual_name, output_dir) if created else False
 
     return {
         'name':        name,
@@ -759,6 +764,7 @@ def process_challenge(client, doc, fmt, skill_content, sample_content, cover):
         'fmt':         fmt,
         'difficulty':  diff,
         'errors':      errors,
+        'warnings':    [w for w in warnings if "solution.md not written yet" not in w],
         'pushed':      pushed,
     }
 
@@ -810,9 +816,9 @@ def main():
         raw_diff = d['difficulty']
         docs.append({
             **d,
-            'name_clean':       build_name(obj_id, d['index'], 'clean'),
-            'name_broken':      build_name(obj_id, d['index'], 'broken'),
-            'difficulty_clean': map_difficulty(raw_diff, 'clean'),
+            'name_clean':        build_name(obj_id, d['index'], 'clean'),
+            'name_broken':       build_name(obj_id, d['index'], 'broken'),
+            'difficulty_clean':  map_difficulty(raw_diff, 'clean'),
             'difficulty_broken': map_difficulty(raw_diff, 'broken'),
         })
 
@@ -825,7 +831,7 @@ def main():
             work.append((doc, 'broken'))
 
     n_total = len(work)
-    print(f"Generating {n_total} challenges from {len(docs)} how-to(s):")
+    print(f"Generating {n_total} challenge(s) from {len(docs)} how-to(s):")
     for doc in docs:
         print(f"  howto_{doc['index']}: {doc['path'].name}")
         if not filter_fmt or filter_fmt == 'clean':
@@ -860,8 +866,9 @@ def main():
     for r in results:
         ok    = "✅" if r['pushed'] else "⚠️ "
         issue = f" [{len(r['errors'])} errors]" if r['errors'] else ""
+        warn  = f" [{len(r['warnings'])} warnings]" if r['warnings'] else ""
         sname = f" ({r['actual_name']})" if r['actual_name'] and r['actual_name'] != r['name'] else ""
-        print(f"  {ok} {r['name']}{sname} [{r['difficulty']}]{issue}")
+        print(f"  {ok} {r['name']}{sname} [{r['difficulty']}]{issue}{warn}")
 
     if any(r['errors'] for r in results):
         print(f"\nError details:")
@@ -878,7 +885,8 @@ def main():
                 d = str(Path(STAGE5_DIR) / r['name'])
                 print(f"  labctl content push challenge {r['actual_name']} --dir {d} --force")
 
-    print(f"\nView: https://labs.iximiuz.com/challenges")
+    print(f"\nNext: python3 build_manifest.py {obj_id}")
+    print(f"View: https://labs.iximiuz.com/challenges")
 
 
 if __name__ == "__main__":

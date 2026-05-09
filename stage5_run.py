@@ -1,18 +1,18 @@
 #!/usr/bin/env python3
 """
-Stage 5 - iximiuz Labs
+Stage 5 - iximiuz Labs Tutorial Generator
 Transforms Stage 3 Diataxis documents into production iximiuz tutorial format.
 
 Reads from:  03_diataxis/output/<obj>/<obj>_tutorial_*.md
              03_diataxis/output/<obj>/<obj>_howto_*.md
 Writes to:   05_iximiuz/output/<name>/index.md
              05_iximiuz/output/<name>/__static__/cover.png
-Deploys via: labctl content create + labctl content push
+Deploys via: labctl content create tutorial + labctl content push
 
 Usage:
-  python3 stage5_run.py x200_101           # process all 12 docs
-  python3 stage5_run.py x200_101 tutorial 1  # process tutorial_01 only
-  python3 stage5_run.py x200_101 howto 1    # process howto_01 only
+  python3 stage5_run.py x200_101              # all 12 docs
+  python3 stage5_run.py x200_101 tutorial 1   # tutorial_01 only
+  python3 stage5_run.py x200_101 howto 1      # howto_01 only
 """
 
 import anthropic
@@ -39,15 +39,17 @@ MAX_TOKENS = 16000
 STAGE3_DIR = "03_diataxis/output"
 STAGE5_DIR = "05_iximiuz/output"
 
+# iximiuz platform reference — loaded into every Sonnet call
 SKILL_FILE      = "_config/iximiuz-ref/iximiuz-CLAUDE.md"
+# Canonical format sample — first 6000 chars used (token efficiency; full file is 52KB)
 SAMPLE_TUTORIAL = "_config/iximiuz-ref/iximiuz-sample-tutorial.md"
+SAMPLE_TRIM     = 6000
 
 CATEGORY_NAMES = {
     "linux", "networking", "containers", "kubernetes",
     "programming", "observability", "security", "ci-cd",
     "generative-ai", "cloud", "iac"
 }
-
 FORBIDDEN_TAGS = CATEGORY_NAMES | {"ex200"}
 
 # ── PNG GENERATION ───────────────────────────────────────────────────────────
@@ -83,13 +85,18 @@ def write_binary(path, data):
 # ── FRONTMATTER ──────────────────────────────────────────────────────────────
 
 def extract_frontmatter(content):
+    """
+    Returns (fm_dict, error_str).
+    fm_dict is {} and error_str is set if YAML parse fails.
+    """
     match = re.match(r'^---\n(.*?)\n---', content, re.DOTALL)
     if not match:
-        return {}
+        return {}, "No frontmatter block found"
     try:
-        return yaml.safe_load(match.group(1)) or {}
-    except Exception:
-        return {}
+        fm = yaml.safe_load(match.group(1)) or {}
+        return fm, None
+    except yaml.YAMLError as e:
+        return {}, str(e)
 
 def strip_preamble(content):
     """Strip any text Sonnet prepends before the opening --- frontmatter."""
@@ -102,10 +109,12 @@ def strip_preamble(content):
 # ── DOCUMENT DISCOVERY ───────────────────────────────────────────────────────
 
 def build_name(obj_id, doc_type, index):
+    """Build iximiuz content name: rhcsa-x200101-tutorial-1"""
     slug = obj_id.replace('_', '')
     return f"rhcsa-{slug}-{doc_type}-{index}"
 
 def get_stage3_docs(obj_id, filter_type=None, filter_index=None):
+    """Return ordered list of docs to process (tutorials then howtos)."""
     stage3_dir = Path(STAGE3_DIR) / obj_id
     docs = []
     for glob, doc_type, index_key in [
@@ -113,8 +122,8 @@ def get_stage3_docs(obj_id, filter_type=None, filter_index=None):
         (f"{obj_id}_howto_*.md",    "howto",    "howto_index"),
     ]:
         for path in sorted(stage3_dir.glob(glob)):
-            fm    = extract_frontmatter(read_file(path))
-            index = fm.get(index_key) or fm.get('tutorial_index') or fm.get('howto_index', 1)
+            fm, _ = extract_frontmatter(read_file(path))
+            index  = fm.get(index_key) or fm.get('tutorial_index') or fm.get('howto_index', 1)
             docs.append({
                 'path':        path,
                 'frontmatter': fm,
@@ -122,7 +131,6 @@ def get_stage3_docs(obj_id, filter_type=None, filter_index=None):
                 'index':       index,
                 'name':        build_name(obj_id, doc_type, index),
             })
-
     if filter_type:
         docs = [d for d in docs if d['type'] == filter_type]
     if filter_index:
@@ -132,7 +140,11 @@ def get_stage3_docs(obj_id, filter_type=None, filter_index=None):
 # ── SERVER NAME DETECTION ────────────────────────────────────────────────────
 
 def get_server_name(base_name, pause=1):
-    """Get actual server name after create — iximiuz appends 8-char hex suffix."""
+    """
+    Get actual server name after create.
+    iximiuz appends an 8-char hex suffix: base-name-a1b2c3d4.
+    Tutorials and how-tos are both kind=tutorial on iximiuz.
+    """
     if pause:
         time.sleep(pause)
     result = subprocess.run(
@@ -170,67 +182,91 @@ A learner completing this lab must feel:
 
 ---
 
-## HARD CONSTRAINTS — VIOLATIONS WILL BREAK THE PLATFORM
-
-### Machine Name
-- Playground is `rockylinux`
-- Machine name is ALWAYS `rocky-01` — never `node-01`, never `server`, never anything else
-- Every `machine:` field in tasks must be `rocky-01`
-
-### init_history_flush — EXACT PATTERN, NO VARIATIONS
-Every tutorial MUST have this as the FIRST task, exactly as written:
-
-```yaml
-tasks:
-  init_history_flush:
-    init: true
-    machine: rocky-01
-    user: laborant
-    run: |
-      echo 'PROMPT_COMMAND="history -a; $PROMPT_COMMAND"' >> /home/laborant/.bashrc
-      chown laborant:laborant /home/laborant/.bashrc
-```
-
-This pattern writes history after EVERY command. Without it, history is only written on session exit and verification tasks will fail.
-
-### tagz
-- Maximum 5 tags — platform enforces this hard limit, exceeding it causes push failure
-- MUST NOT contain: linux, networking, containers, kubernetes, programming, observability, security, ci-cd, generative-ai, cloud, iac, ex200
-- Good RHCSA tags: rhcsa, bash, shell, ssh, tty, history, redirection, grep, regex, permissions, etc.
-
-### cover
-- Always: `cover: __static__/cover.png` — exact string, no variations
+## HARD CONSTRAINTS — VIOLATIONS BREAK THE PLATFORM
 
 ### kind
-- Always: `kind: tutorial` — no other value accepted
+Always: `kind: tutorial` — no other value accepted.
+
+### Machine Name
+Playground is `rockylinux`. Machine name is ALWAYS `rocky-01`.
+Never `node-01`, never `server`, never anything else.
+Every `machine:` field in every task must be `rocky-01`.
+
+### cover
+Always: `cover: __static__/cover.png` — exact string, no variations.
+
+### tagz
+- Maximum 5 tags — platform hard limit, exceeding causes push failure
+- MUST NOT contain: linux, networking, containers, kubernetes, programming,
+  observability, security, ci-cd, generative-ai, cloud, iac, ex200
+- Good RHCSA tags: rhcsa, bash, shell, ssh, tty, history, redirection, grep, etc.
 
 ### NO GitBook syntax
-- Never use: {%, %}, {% stepper %}, {% hint %}, {% tabs %}, {% code %}
-- These are GitBook-only and will not render on iximiuz
+Never use: {%, %}, {% stepper %}, {% hint %}, {% tabs %}, {% code %}
+These are GitBook-only and will not render on iximiuz.
 
-### ::image-box :src — NO __static__/ prefix
-```markdown
-::image-box
----
-:src: image.png          ← filename only, NO __static__/ prefix
-:alt: 'Description'
-:max-width: 800px
----
-_Caption._
-::
-```
+### NO code fences inside YAML frontmatter
+Never put ``` inside the frontmatter block — it breaks YAML parsing and
+causes push failure. Code examples belong in the markdown body only.
+
+### task/component pairing — STRICT
+Every `verify_*` and `input_*` task in frontmatter MUST have a paired
+`::simple-task` or `::user-input-task` in the markdown body. No exceptions.
 
 ### ::remark-box kinds
-Valid: `info`, `warning`, `error` — never `danger` (that is GitBook only)
+Valid: `info`, `warning`, `error` — never `danger` (GitBook only).
 
-### task/component pairing — STRICT REQUIREMENT
-Every `verify_*` and `input_*` task in the frontmatter MUST have a paired
-`::simple-task` or `::user-input-task` component in the markdown body.
-If you define 5 verify tasks, you write 5 `::simple-task` blocks. No exceptions.
+### ::image-box :src
+Filename only — NO `__static__/` prefix in :src.
+Correct:   `:src: image.png`
+Wrong:     `:src: __static__/image.png`
 
 ---
 
-## Playground Template (use this exactly)
+## YAML SAFETY RULES — run: block scripts
+
+### No heredocs
+YAML run: blocks cannot contain heredoc syntax. The bare `EOF` marker on its
+own line breaks YAML parsing.
+
+WRONG:
+  run: |
+    cat << 'EOF' >> ~/.bashrc
+    export VAR=value
+    EOF
+
+CORRECT:
+  run: |
+    echo 'export VAR=value' >> /home/laborant/.bashrc
+
+### No unquoted special characters in YAML values
+Avoid unquoted: `[`, `]`, `*`, `{`, `}`, `?`, `|`, `>`, `!`, `%`, `@`, `&`
+These are YAML metacharacters. Use double-quoted strings when values contain them.
+
+---
+
+## NEW TERMINAL TAB (REQUIRED)
+
+The iximiuz playground opens a terminal tab BEFORE init tasks complete.
+The first terminal tab will NOT have the PROMPT_COMMAND set — history
+verification will silently fail if learners run commands there.
+
+At the VERY START of the tutorial body (first content after frontmatter),
+before any sections or steps, add this EXACT block:
+
+::remark-box
+---
+kind: info
+---
+**Before running any commands:** click the **+** button in the terminal tab
+bar to open a new terminal tab. The playground's history tracking activates
+in new sessions only. Commands run in the original tab will not register for
+task verification.
+::
+
+---
+
+## Playground Template
 
 ```yaml
 playground:
@@ -242,7 +278,9 @@ playground:
         ramSize: 2Gi
 ```
 
-## init_history_flush (use this exactly)
+## init_history_flush — EXACT PATTERN, NO VARIATIONS
+
+Every tutorial MUST have this as the FIRST task:
 
 ```yaml
 tasks:
@@ -255,7 +293,10 @@ tasks:
       chown laborant:laborant /home/laborant/.bashrc
 ```
 
-## History-Based Verification Pattern (correct)
+This writes history after EVERY command. Without it, history is only written
+on session exit and all verification tasks will fail.
+
+## History-Based Verification Pattern
 
 ```yaml
   verify_command_ran:
@@ -265,6 +306,7 @@ tasks:
       grep -q 'the_command' /home/laborant/.bash_history && exit 0 || exit 1
     hintcheck: |
       echo "Run: the_command"
+      echo "Make sure you are in the new terminal tab (Term 2)."
 ```
 
 ## ::simple-task Pattern (required for every verify_ task)
@@ -294,6 +336,7 @@ KEEP: All technical content, step sequence, commands, expected outputs.
 
 ADD:
 - YAML frontmatter with playground + task definitions
+- New terminal tab remark-box at the very top of the body (REQUIRED)
 - `::simple-task` for every meaningful step (paired with frontmatter task)
 - init tasks to pre-stage the environment
 - `::hint-box` for predictable failure points
@@ -303,17 +346,7 @@ ADD:
 ADAPT:
 - GNOME/graphical steps → skip or note as context only (playground is headless)
 - SSH to remote host → use SSH loopback: `ssh laborant@localhost`
-- Prompts `[student@rhel9 ~]$`
-
-NEW TERMINAL TAB INSTRUCTION (REQUIRED):
-At the very start of the tutorial body, before any steps, add this exact block:
-
-::remark-box
----
-kind: info
----
-**Before running any commands:** click the **+** button in the terminal tab bar to open a new terminal tab. The playground history tracking activates in new sessions only. Commands run in the original tab will not register for task verification.
-:: → show as `[laborant@rocky-01 ~]$`
+- Prompts `[student@rhel9 ~]$` → show as `[laborant@rocky-01 ~]$`
 
 ---
 
@@ -326,10 +359,9 @@ Output starts with `---` frontmatter and ends with the last line of markdown."""
 # ── PROMPT BUILDER ───────────────────────────────────────────────────────────
 
 def build_prompt(doc, skill_content, sample_content):
-    source         = read_file(doc['path'])
-    name           = doc['name']
-    dtype          = doc['type']
-    sample_trimmed = sample_content[:6000]
+    source = read_file(doc['path'])
+    name   = doc['name']
+    dtype  = doc['type']
 
     return f"""Transform this Stage 3 Diataxis {dtype} document into a production iximiuz Labs tutorial.
 
@@ -341,9 +373,9 @@ def build_prompt(doc, skill_content, sample_content):
 
 ---
 
-## Format Sample (MDC syntax reference — note: sample uses k3s playground, ignore its machine names)
+## Format Sample (MDC syntax — note: sample uses k3s playground, ignore its machine names)
 
-{sample_trimmed}
+{sample_content[:SAMPLE_TRIM]}
 
 ---
 
@@ -356,13 +388,17 @@ def build_prompt(doc, skill_content, sample_content):
 Produce the complete `index.md` for `{name}`.
 Start with `---` frontmatter. No preamble. No trailing commentary.
 
-REMINDER — hard constraints:
-- machine: rocky-01 (always, everywhere)
-- tagz: max 5, no category names, no ex200
-- init_history_flush: use PROMPT_COMMAND pattern exactly
-- Every verify_* task needs a paired ::simple-task in body
-- ::image-box :src is filename only, no __static__/ prefix
-- No GitBook liquid syntax"""
+HARD CONSTRAINT CHECKLIST:
+- kind: tutorial
+- machine: rocky-01 everywhere
+- tagz: max 5, no forbidden tags
+- cover: __static__/cover.png
+- init_history_flush: PROMPT_COMMAND pattern, first task
+- New terminal tab ::remark-box: FIRST thing in the body
+- Every verify_* task paired with ::simple-task in body
+- No GitBook liquid syntax
+- No code fences (```) inside frontmatter
+- No heredocs in run: blocks"""
 
 # ── VALIDATION ───────────────────────────────────────────────────────────────
 
@@ -374,11 +410,15 @@ def validate(content, name):
         errors.append("Does not start with frontmatter ---")
         return errors, warnings
 
-    fm = extract_frontmatter(content)
+    # Explicit YAML parse check — report the actual error, not just missing fields
+    fm, yaml_err = extract_frontmatter(content)
+    if yaml_err and not fm:
+        errors.append(f"YAML parse failure: {yaml_err}")
+        return errors, warnings
 
     # Required fields
     if fm.get('kind') != 'tutorial':
-        errors.append(f"kind='{fm.get('kind')}' — must be 'tutorial'")
+        errors.append(f"kind='{fm.get('kind')}' must be 'tutorial'")
     if not fm.get('title'):
         errors.append("Missing title")
     if not fm.get('description'):
@@ -394,33 +434,33 @@ def validate(content, name):
     elif not str(fm['cover']).startswith('__static__/'):
         errors.append(f"cover must start with __static__/ — got '{fm['cover']}'")
 
-    # tagz constraints
+    # tagz
     tagz = [str(t) for t in (fm.get('tagz') or [])]
     if len(tagz) > 5:
-        errors.append(f"tagz has {len(tagz)} tags — max 5")
+        errors.append(f"tagz has {len(tagz)} — max 5")
     bad = [t for t in tagz if t in FORBIDDEN_TAGS]
     if bad:
         errors.append(f"tagz contains forbidden tags: {bad}")
 
-    # Machine name
+    # Tasks
     tasks = fm.get('tasks') or {}
+
+    # Machine name check
     for tname, tdef in tasks.items():
         if isinstance(tdef, dict):
             m = tdef.get('machine', '')
             if m and m != 'rocky-01':
-                errors.append(f"Task '{tname}' uses machine '{m}' — must be 'rocky-01'")
+                errors.append(f"Task '{tname}': machine='{m}' must be 'rocky-01'")
 
-    # init_history_flush must be present
+    # init_history_flush
     if 'init_history_flush' not in tasks:
         errors.append("Missing init_history_flush task")
     else:
         idf = tasks['init_history_flush']
-        if isinstance(idf, dict):
-            run = idf.get('run', '')
-            if 'PROMPT_COMMAND' not in run:
-                errors.append("init_history_flush missing PROMPT_COMMAND pattern")
+        if isinstance(idf, dict) and 'PROMPT_COMMAND' not in idf.get('run', ''):
+            errors.append("init_history_flush missing PROMPT_COMMAND pattern")
 
-    # Every verify_/input_ task must have paired body component
+    # task/component pairing
     for tname in tasks:
         if tname.startswith(('verify_', 'input_')):
             if f':name: {tname}' not in content:
@@ -430,21 +470,26 @@ def validate(content, name):
     if '{%' in content or '%}' in content:
         errors.append("Contains GitBook liquid syntax — platform violation")
 
-    # Fence inside frontmatter check
-    end_fm = content.find("\n---\n", 4)
-    if end_fm > 0:
-        fm_block = content[:end_fm]
-        if "```" in fm_block:
-            errors.append("Code fence found inside frontmatter — will cause push failure")
+    # Fence inside frontmatter
+    end_fm = content.find('\n---\n', 4)
+    if end_fm > 0 and '```' in content[:end_fm]:
+        errors.append("Code fence (```) inside frontmatter — will cause push failure")
+
+    # New terminal tab remark-box
+    body_start = content.find('\n---\n', 4)
+    if body_start > 0:
+        body_head = content[body_start:body_start + 400]
+        if '::remark-box' not in body_head:
+            warnings.append("New terminal tab ::remark-box not found near start of body")
 
     # MDC balance
     opens = content.count('::')
     if opens % 2 != 0:
         warnings.append(f"Odd :: count ({opens}) — check for unclosed MDC blocks")
 
-    # image-box __static__ prefix check
+    # image-box __static__ prefix
     if ':src: __static__/' in content:
-        warnings.append("::image-box :src contains __static__/ prefix — should be filename only")
+        warnings.append("::image-box :src contains __static__/ prefix — filename only")
 
     return errors, warnings
 
@@ -464,7 +509,7 @@ def call_sonnet(client, prompt, attempt=1):
     except anthropic.RateLimitError:
         if attempt <= 3:
             wait = 30 * attempt
-            print(f"  Rate limit — waiting {wait}s (attempt {attempt}/3)")
+            print(f"  Rate limit — waiting {wait}s ({attempt}/3)")
             time.sleep(wait)
             return call_sonnet(client, prompt, attempt + 1)
         raise
@@ -472,6 +517,7 @@ def call_sonnet(client, prompt, attempt=1):
 # ── LABCTL ───────────────────────────────────────────────────────────────────
 
 def labctl_create(name, output_dir):
+    """Create tutorial on server. Returns actual server name (with hex suffix)."""
     result = subprocess.run(
         ['labctl', 'content', 'create', 'tutorial', name, '--dir', output_dir],
         capture_output=True, text=True
@@ -497,6 +543,7 @@ def labctl_create(name, output_dir):
     return actual
 
 def labctl_push(actual_name, output_dir):
+    """Push content to server using actual server name."""
     result = subprocess.run(
         ['labctl', 'content', 'push', 'tutorial', actual_name,
          '--dir', output_dir, '--force'],
@@ -534,6 +581,7 @@ def main():
     stage3_dir = Path(STAGE3_DIR) / obj_id
     if not stage3_dir.exists():
         print(f"ERROR: Stage 3 output not found: {stage3_dir}")
+        print(f"Run:   python3 stage3_run.py 02_map/output/{obj_id}/{obj_id}_mapped-passages.md")
         sys.exit(1)
 
     for fpath in [SKILL_FILE, SAMPLE_TUTORIAL]:
@@ -565,14 +613,12 @@ def main():
         cover_path = str(Path(output_dir) / "__static__" / "cover.png")
 
         print(f"\n[{i}/{len(docs)}] {doc['path'].name} → {name}")
-
-        # Generate
         print(f"  Calling Sonnet 4.6...")
+
         prompt  = build_prompt(doc, skill_content, sample_content)
         raw     = call_sonnet(client, prompt)
         content = strip_preamble(raw)
 
-        # Validate
         errors, warnings = validate(content, name)
         if errors:
             print(f"  ERRORS ({len(errors)}):")
@@ -584,12 +630,10 @@ def main():
         if not errors and not warnings:
             print(f"  Validation passed ✓")
 
-        # Deploy
         os.makedirs(Path(output_dir) / "__static__", exist_ok=True)
         actual_name = labctl_create(name, output_dir)
         created     = actual_name is not None
 
-        # Overwrite scaffold with generated content
         write_file(index_path, content)
         write_binary(cover_path, cover)
 
@@ -623,8 +667,9 @@ def main():
     for r in results:
         ok    = "✅" if r['pushed'] else "⚠️ "
         issue = f" [{len(r['errors'])} errors]" if r['errors'] else ""
+        warn  = f" [{len(r['warnings'])} warnings]" if r['warnings'] else ""
         sname = f" ({r['actual_name']})" if r['actual_name'] and r['actual_name'] != r['name'] else ""
-        print(f"  {ok} {r['name']}{sname}{issue}")
+        print(f"  {ok} {r['name']}{sname}{issue}{warn}")
 
     if any(r['errors'] for r in results):
         print(f"\nError details:")
@@ -641,7 +686,7 @@ def main():
                 d = str(Path(STAGE5_DIR) / r['name'])
                 print(f"  labctl content push tutorial {r['actual_name']} --dir {d} --force")
 
-    print(f"\nNext: python3 stage5_verify.py {obj_id}")
+    print(f"\nNext: python3 build_manifest.py {obj_id}")
     print(f"View: https://labs.iximiuz.com/tutorials")
 
 
