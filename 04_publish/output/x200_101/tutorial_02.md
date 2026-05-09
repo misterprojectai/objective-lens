@@ -225,3 +225,8 @@ Now that you have built the skill of constructing well-formed commands, continue
 * [How-to: Get Help for Any Command](tutorial_02.md) — use `--help` and `man` to discover options for unfamiliar commands
 * [Explanation: Understanding the Linux Shell and Command Syntax](tutorial_02.md) — understand why the shell parses commands the way it does
 * [Reference: Bash Command Syntax and Options](tutorial_02.md) — see the complete specification of command structure and option conventions
+
+## Practice This Lab
+
+{% embed url="https://labs.iximiuz.com/tutorials/rhcsa-x200101-tutorial-2-31234c1c" %}
+

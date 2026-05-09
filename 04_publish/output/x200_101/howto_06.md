@@ -294,3 +294,9 @@ Any `No such file or directory` error indicates a quoting failure on that specif
 
 **Variable inside single quotes not expanded** → Single quotes suppress all expansion by design → Switch to double quotes and verify the variable reference with `echo` first
 {% endhint %}
+
+## Test Yourself
+
+{% embed url="https://labs.iximiuz.com/challenges/rhcsa-x200101-challenge-6-d7640073" %}
+
+**Advanced — Broken Environment:** [Broken Environment Challenge →](https://labs.iximiuz.com/challenges/rhcsa-x200101-challenge-broken-6-0f81e7c4)

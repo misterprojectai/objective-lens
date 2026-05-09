@@ -199,3 +199,9 @@ Running the command itself completes without a `command not found` error.
 
 **`dnf provides` returns no match** Cause: Package name differs from the command name. Fix: Run `dnf search <keyword>` to locate the correct package name.
 {% endhint %}
+
+## Test Yourself
+
+{% embed url="https://labs.iximiuz.com/challenges/rhcsa-x200101-challenge-2-2f97f6e6" %}
+
+**Advanced — Broken Environment:** [Broken Environment Challenge →](https://labs.iximiuz.com/challenges/rhcsa-x200101-challenge-broken-2-56ece41e)

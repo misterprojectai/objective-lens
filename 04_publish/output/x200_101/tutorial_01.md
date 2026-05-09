@@ -255,3 +255,8 @@ echo $SHELL
 * [How-to: Access a Shell Prompt on RHEL](tutorial_01.md) — procedures for opening terminal sessions quickly in different scenarios
 * [Explanation: Understanding the Linux Shell and Command Syntax](tutorial_01.md) — understand why the prompt looks the way it does, what `$SHELL` means, and how Bash fits into the Linux architecture
 * [Reference: Bash Command Syntax and Options](tutorial_01.md) — complete specification of command structure and shell variables
+
+## Practice This Lab
+
+{% embed url="https://labs.iximiuz.com/tutorials/rhcsa-x200101-tutorial-1-75b72671" %}
+

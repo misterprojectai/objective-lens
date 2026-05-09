@@ -325,3 +325,8 @@ Now that you have built efficient command-line habits, continue with:
 * [How-to: Use Command History and Keyboard Shortcuts](tutorial_06.md) — apply these techniques in real administrative scenarios
 * [Explanation: Understanding the Linux Shell and Command Syntax](tutorial_06.md) — understand why history and readline exist as part of the shell's interactive design
 * [Reference: Bash Command Syntax and Options](tutorial_06.md) — see the complete specification of history expansion operators and readline bindings
+
+## Practice This Lab
+
+{% embed url="https://labs.iximiuz.com/tutorials/rhcsa-x200101-tutorial-6-84bdaad8" %}
+

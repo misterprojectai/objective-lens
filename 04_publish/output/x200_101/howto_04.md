@@ -260,3 +260,9 @@ Expected: output matches the most recently written commands.
 * Cause: The command is not in the in-memory history list, or was deleted
 * Fix: Search `~/.bash_history` directly with `grep pattern ~/.bash_history`
 {% endhint %}
+
+## Test Yourself
+
+{% embed url="https://labs.iximiuz.com/challenges/rhcsa-x200101-challenge-4-c1d04a31" %}
+
+**Advanced — Broken Environment:** [Broken Environment Challenge →](https://labs.iximiuz.com/challenges/rhcsa-x200101-challenge-broken-4-6dba8ec6)

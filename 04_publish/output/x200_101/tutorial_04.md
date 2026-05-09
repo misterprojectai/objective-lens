@@ -241,3 +241,8 @@ Both the parent shell and the child shell return the value you defined.
 * [How-to: Persist Environment Variables Across Sessions](tutorial_04.md) — make variables survive logout by writing them to `~/.bash_profile`
 * [Explanation: Understanding the Linux Shell and Command Syntax](tutorial_04.md) — understand why exported variables propagate to child processes but not to parent processes
 * [Reference: Bash Command Syntax and Options](tutorial_04.md) — see complete syntax for variable assignment, `export`, `env`, and `echo`
+
+## Practice This Lab
+
+{% embed url="https://labs.iximiuz.com/tutorials/rhcsa-x200101-tutorial-4-6ee7a152" %}
+

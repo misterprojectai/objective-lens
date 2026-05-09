@@ -191,3 +191,9 @@ Not: `export PATH=/opt/myapp/bin`
 chmod +x /opt/myapp/bin/mycommand
 ```
 {% endhint %}
+
+## Test Yourself
+
+{% embed url="https://labs.iximiuz.com/challenges/rhcsa-x200101-challenge-3-45df473d" %}
+
+**Advanced — Broken Environment:** [Broken Environment Challenge →](https://labs.iximiuz.com/challenges/rhcsa-x200101-challenge-broken-3-dbe16720)

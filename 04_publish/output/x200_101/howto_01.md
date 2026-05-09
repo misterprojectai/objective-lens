@@ -202,3 +202,9 @@ A `man -f` result identical to `whatis` output confirms the man page database is
 
 **`info command` shows a generic reader rather than the command's page** → Cause: No standalone info page exists for that command. → Fix: Fall back to `man commandname` or `commandname --help`.
 {% endhint %}
+
+## Test Yourself
+
+{% embed url="https://labs.iximiuz.com/challenges/rhcsa-x200101-challenge-1-4e520bb5" %}
+
+**Advanced — Broken Environment:** [Broken Environment Challenge →](https://labs.iximiuz.com/challenges/rhcsa-x200101-challenge-broken-1-7a6c4e17)

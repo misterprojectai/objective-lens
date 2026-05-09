@@ -16,6 +16,7 @@
 * [How-to 4: Use Command History to Recall and Re-execute Commands](x200_101/howto_04.md)
 * [How-to 5: Audit the Shell Environment Before Running Administrative Tasks](x200_101/howto_05.md)
 * [How-to 6: Use Quoting and Escaping to Handle Special Characters](x200_101/howto_06.md)
+  * [Practice Labs](x200_101/practice-labs.md)
 
 ## RHCSA — x200_102
 

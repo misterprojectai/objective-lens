@@ -323,9 +323,14 @@ How-to 6: Use Quoting and Escaping to Handle Special Characters
 {% content-ref url="reference.md" %}
 Bash Shell and Command Syntax Reference
 {% endcontent-ref %}
+
 ## Practice on a Live System
 
-The following interactive labs run on a live Rocky Linux 9 playground. Each lab corresponds to a hands-on section of this objective.
+The following interactive labs run on a live Rocky Linux 9 playground. Start with tutorials, move to challenges when ready, then attempt the broken environment challenges for exam-level difficulty.
+
+### Guided Tutorials
+
+Learn the concepts with guided, step-by-step labs. Every command you run is verified in real time.
 
 {% embed url="https://labs.iximiuz.com/tutorials/rhcsa-x200101-tutorial-1-75b72671" %}
 
@@ -338,3 +343,36 @@ The following interactive labs run on a live Rocky Linux 9 playground. Each lab 
 {% embed url="https://labs.iximiuz.com/tutorials/rhcsa-x200101-tutorial-5-99c09d6a" %}
 
 {% embed url="https://labs.iximiuz.com/tutorials/rhcsa-x200101-tutorial-6-84bdaad8" %}
+
+### Practice Challenges
+
+Apply what you learned without guidance. Complete the task — the system verifies the outcome.
+
+{% embed url="https://labs.iximiuz.com/challenges/rhcsa-x200101-challenge-1-4e520bb5" %}
+
+{% embed url="https://labs.iximiuz.com/challenges/rhcsa-x200101-challenge-2-2f97f6e6" %}
+
+{% embed url="https://labs.iximiuz.com/challenges/rhcsa-x200101-challenge-3-45df473d" %}
+
+{% embed url="https://labs.iximiuz.com/challenges/rhcsa-x200101-challenge-4-c1d04a31" %}
+
+{% embed url="https://labs.iximiuz.com/challenges/rhcsa-x200101-challenge-5-78ed0ed6" %}
+
+{% embed url="https://labs.iximiuz.com/challenges/rhcsa-x200101-challenge-6-d7640073" %}
+
+### Advanced — Broken Environment
+
+Diagnose and fix a misconfigured system. No steps, no hints unless you ask. This is exam conditions.
+
+{% embed url="https://labs.iximiuz.com/challenges/rhcsa-x200101-challenge-broken-1-7a6c4e17" %}
+
+{% embed url="https://labs.iximiuz.com/challenges/rhcsa-x200101-challenge-broken-2-56ece41e" %}
+
+{% embed url="https://labs.iximiuz.com/challenges/rhcsa-x200101-challenge-broken-3-dbe16720" %}
+
+{% embed url="https://labs.iximiuz.com/challenges/rhcsa-x200101-challenge-broken-4-6dba8ec6" %}
+
+{% embed url="https://labs.iximiuz.com/challenges/rhcsa-x200101-challenge-broken-5-6fe249f9" %}
+
+{% embed url="https://labs.iximiuz.com/challenges/rhcsa-x200101-challenge-broken-6-0f81e7c4" %}
+

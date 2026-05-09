@@ -283,3 +283,7 @@ glob single-quoted: *.txt
 - [Explanation: Understanding the Linux Shell and Command Syntax](#) — the full conceptual model behind why Bash expansion works the way it does
 - [Reference: Bash Command Syntax and Options](#) — complete specification of quoting rules, expansion types, and special characters
 
+## Practice This Lab
+
+{% embed url="https://labs.iximiuz.com/tutorials/rhcsa-x200101-tutorial-5-99c09d6a" %}
+

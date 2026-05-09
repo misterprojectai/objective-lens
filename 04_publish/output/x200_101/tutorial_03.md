@@ -191,3 +191,8 @@ bash: type: foobar: not found
 ## Next Steps
 
 <table data-view="cards"><thead><tr><th></th><th></th><th data-hidden data-card-target data-type="content-ref"></th></tr></thead><tbody><tr><td><strong>How-to: Modify $PATH</strong></td><td>Add a custom command directory to make your own tools available as simple commands.</td><td><a href="tutorial_03.md">tutorial_03.md</a></td></tr><tr><td><strong>Explanation: Shell and Command Syntax</strong></td><td>Understand why builtins must live inside the shell and cannot be external programs.</td><td><a href="tutorial_03.md">tutorial_03.md</a></td></tr><tr><td><strong>Reference: Bash Command Syntax and Options</strong></td><td>See the complete resolution order and all <code>type</code> output formats.</td><td><a href="tutorial_03.md">tutorial_03.md</a></td></tr></tbody></table>
+
+## Practice This Lab
+
+{% embed url="https://labs.iximiuz.com/tutorials/rhcsa-x200101-tutorial-3-37774fed" %}
+

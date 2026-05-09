@@ -279,3 +279,9 @@ id && echo $SHELL && echo $PATH | tr ':' '\n' | head -6 && alias | grep -E 'sudo
 * **Cause:** `sudo` preserved the invoking user's `$USER` variable via an `env_keep` entry in `/etc/sudoers`
 * **Fix:** Use `id` rather than `$USER` to determine effective identity; audit `/etc/sudoers` for `env_keep` entries and remove `USER` if present
 {% endhint %}
+
+## Test Yourself
+
+{% embed url="https://labs.iximiuz.com/challenges/rhcsa-x200101-challenge-5-78ed0ed6" %}
+
+**Advanced — Broken Environment:** [Broken Environment Challenge →](https://labs.iximiuz.com/challenges/rhcsa-x200101-challenge-broken-5-6fe249f9)
