@@ -430,6 +430,13 @@ def validate(content, name):
     if '{%' in content or '%}' in content:
         errors.append("Contains GitBook liquid syntax — platform violation")
 
+    # Fence inside frontmatter check
+    end_fm = content.find("\n---\n", 4)
+    if end_fm > 0:
+        fm_block = content[:end_fm]
+        if "```" in fm_block:
+            errors.append("Code fence found inside frontmatter — will cause push failure")
+
     # MDC balance
     opens = content.count('::')
     if opens % 2 != 0:
