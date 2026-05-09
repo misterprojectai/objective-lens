@@ -141,14 +141,12 @@ grep -v 'nologin' /etc/passwd
 ```
 root:x:0:0:root:/root:/bin/bash
 operator:x:11:0:operator:/root:/sbin/nologin
----
+# (grep -i ROOT)
 root:x:0:0:root:/root:/bin/bash
 operator:x:11:0:operator:/root:/sbin/nologin
----
+# (dmesg | grep cpu)
 (two lines from dmesg mentioning cpu)
-```
-
----
+# (grep -v nologin)
 root:x:0:0:root:/root:/bin/bash
 sync:x:5:0:sync:/sbin:/bin/sync
 shutdown:x:6:0:shutdown:/sbin:/sbin/shutdown
