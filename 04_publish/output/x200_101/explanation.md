@@ -323,3 +323,18 @@ How-to 6: Use Quoting and Escaping to Handle Special Characters
 {% content-ref url="reference.md" %}
 Bash Shell and Command Syntax Reference
 {% endcontent-ref %}
+## Practice on a Live System
+
+The following interactive labs run on a live Rocky Linux 9 playground. Each lab corresponds to a hands-on section of this objective.
+
+{% embed url="https://labs.iximiuz.com/tutorials/rhcsa-x200101-tutorial-1-75b72671" %}
+
+{% embed url="https://labs.iximiuz.com/tutorials/rhcsa-x200101-tutorial-2-31234c1c" %}
+
+{% embed url="https://labs.iximiuz.com/tutorials/rhcsa-x200101-tutorial-3-37774fed" %}
+
+{% embed url="https://labs.iximiuz.com/tutorials/rhcsa-x200101-tutorial-4-6ee7a152" %}
+
+{% embed url="https://labs.iximiuz.com/tutorials/rhcsa-x200101-tutorial-5-99c09d6a" %}
+
+{% embed url="https://labs.iximiuz.com/tutorials/rhcsa-x200101-tutorial-6-84bdaad8" %}
