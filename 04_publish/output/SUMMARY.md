@@ -33,3 +33,17 @@
 * [How-to 4: "How to Capture Both stdout and stderr to a Single File](x200_102/howto_04.md)
 * [How-to 5: "How to filter and process command output using pipelines](x200_102/howto_05.md)
 * [How-to 6: "How to Capture an Intermediate Pipeline Stage to a File While Continuing Processing](x200_102/howto_06.md)
+
+## RHCSA — x200_103
+
+* [Understanding grep and Regular Expressions](x200_103/explanation.md)
+* [grep and Regular Expressions Reference](x200_103/reference.md)
+* [Tutorial 1: "Filter Text Streams with Basic grep](x200_103/tutorial_01.md)
+* [Tutorial 2: "Anchor Patterns to Line Position with ^ and $](x200_103/tutorial_02.md)
+* [Tutorial 3: "Match Character Sets and Wildcards in grep Patterns](x200_103/tutorial_03.md)
+* [Tutorial 4: "Control Repetition and Use Extended Regular Expressions](x200_103/tutorial_04.md)
+* [How-to 1: "How to Search Log Files for Specific Events with grep](x200_103/howto_01.md)
+* [How-to 2: "How to Control grep Output Format with -n, -l, and -c](x200_103/howto_02.md)
+* [How-to 3: "How to Suppress Noise from Configuration Files Using Anchors and Inversion](x200_103/howto_03.md)
+* [How-to 4: "How to Search Across Multiple Files and Show Match Context](x200_103/howto_04.md)
+* [How-to 5: "How to Extract Structured Data with Extended Regular Expression Patterns](x200_103/howto_05.md)
