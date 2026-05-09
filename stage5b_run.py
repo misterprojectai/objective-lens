@@ -345,6 +345,39 @@ tasks:
       chown laborant:laborant /home/laborant/.bashrc
 ```
 
+## CRITICAL — No Heredocs in YAML run: blocks
+
+YAML parses `run: |` blocks as literal strings. A bare EOF or heredoc
+marker on its own line breaks YAML parsing and causes push failure.
+
+WRONG — heredoc inside run: block:
+  run: |
+    cat << 'EOF' >> ~/.bashrc
+    export VAR=value
+    EOF
+
+CORRECT — use echo or printf instead:
+  run: |
+    echo 'export VAR=value' >> /home/laborant/.bashrc
+    printf 'export VAR=value\n' >> /home/laborant/.bashrc
+
+Also avoid single quotes containing special glob chars like [, ], * in
+YAML values — they break YAML parsing. Use double quotes or escape them.
+
+## CRITICAL — Rocky Linux .bashrc Non-Interactive Guard
+
+Rocky Linux .bashrc has a non-interactive guard (case $-) that causes
+source ~/.bashrc to exit immediately in non-interactive subshells.
+NEVER use subshell sourcing to verify persistence.
+
+CORRECT — grep the file directly:
+  LAST=$(grep -E '^(export )?VARNAME=' /home/laborant/.bashrc | tail -1 | cut -d= -f2- | tr -d "'\"")
+  echo "$LAST" | grep -qE 'expected_value' || exit 1
+
+WRONG — never use:
+  bash --norc --noprofile -c 'source /home/laborant/.bashrc; echo $VAR'
+  bash -c 'source ~/.bashrc 2>/dev/null; echo $VAR'
+
 ## Verify Task Pattern (checks the fix)
 
 ```yaml
