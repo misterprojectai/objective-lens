@@ -1,0 +1,35 @@
+{
+  "obj_id": "x200_101",
+  "tutorials": {
+    "3": "rhcsa-x200101-tutorial-3-37774fed",
+    "5": "rhcsa-x200101-tutorial-5-99c09d6a",
+    "6": "rhcsa-x200101-tutorial-6-84bdaad8",
+    "1": "rhcsa-x200101-tutorial-1-75b72671",
+    "2": "rhcsa-x200101-tutorial-2-31234c1c",
+    "4": "rhcsa-x200101-tutorial-4-6ee7a152"
+  },
+  "howtos": {
+    "3": "rhcsa-x200101-howto-3-d7842b06",
+    "1": "rhcsa-x200101-howto-1-e630f51e",
+    "6": "rhcsa-x200101-howto-6-ae3d868a",
+    "2": "rhcsa-x200101-howto-2-878b0b64",
+    "4": "rhcsa-x200101-howto-4-47e5d749",
+    "5": "rhcsa-x200101-howto-5-96459725"
+  },
+  "challenges": {
+    "1": "rhcsa-x200101-challenge-1-4e520bb5",
+    "3": "rhcsa-x200101-challenge-3-45df473d",
+    "2": "rhcsa-x200101-challenge-2-2f97f6e6",
+    "4": "rhcsa-x200101-challenge-4-c1d04a31",
+    "5": "rhcsa-x200101-challenge-5-78ed0ed6",
+    "6": "rhcsa-x200101-challenge-6-d7640073"
+  },
+  "challenges_broken": {
+    "1": "rhcsa-x200101-challenge-broken-1-7a6c4e17",
+    "2": "rhcsa-x200101-challenge-broken-2-56ece41e",
+    "4": "rhcsa-x200101-challenge-broken-4-6dba8ec6",
+    "5": "rhcsa-x200101-challenge-broken-5-6fe249f9",
+    "3": "rhcsa-x200101-challenge-broken-3-dbe16720",
+    "6": "rhcsa-x200101-challenge-broken-6-0f81e7c4"
+  }
+}
